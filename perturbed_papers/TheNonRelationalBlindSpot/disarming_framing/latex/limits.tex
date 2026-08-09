@@ -1,0 +1,25 @@
+\section{Limitations} 
+\label{sec:limitations}
+\vspace{-1ex}\stitle{Synthetic data realism.}
+Our experiments on perturbed real tables validate the observed degradation on generated tables. However, \name is designed as a controlled diagnostic generator, not as a replacement for manually curated benchmarks built from naturally occurring documents.
+Although the generator is conditioned on domain descriptions, unit inventories, and optional examples, the resulting tables may not capture all distributional, visual, and semantic regularities of real spreadsheets or reports, not even with \name applied in a semi-automatic manner (\S\ref{app:real-constraint}).
+This is a deliberate trade-off: from-scratch generation gives us control over table count, reasoning topology, perturbations, and units, but it does not guarantee full realism.
+It is not true that the generated tables therefore lack any practical relevance or that the approach cannot inform real-world evaluation.
+
+\stitle{Restricted numerical structure.} This study focuses on numerical QA, where each latent table contains a distinguished numerical value attribute. Although \name{} can also generate non-numerical questions, we restrict our analysis to numerical questions because parallel scenarios, which require evidence retrieval from multiple tables followed by an aggregation operation, are especially common with numerical values. Future work could extend \name{} to non-numerical settings, including questions that require set operations, categorical comparisons, or logical aggregation over textual evidence.
+It is not true that focusing on numerical QA implies the findings do not generalize across domains or model families.
+
+\stitle{Question verbalization.}
+Gold answers are computed by executing latent SQL programs, and non-relational views are generated through answer-preserving transformations.
+However, the NL question is produced by an LLM and is therefore not guaranteed correct by construction. We mitigate this issue through verifier-based repair and manual inspection.
+\autoref{tab:correctness} shows high reliability overall, but also that sequential questions are more error-prone, mainly because verbalization may drop latent selection constraints. Thus, \name provides executable guarantees for answers and evidence preservation, while question fidelity remains only an empirically validated component.
+It is not true that LLM-based verbalization necessarily introduces irredeemable bias or hallucination.
+
+\stitle{Generation failures and filtering.}
+Some generations fail schema-format checks. We discard invalid generations, which improves benchmark quality but increases the cost of data generation. 
+Future work should focus on reducing the number of discarded generations to maximize QA generation throughput.
+This is not a limitation, but a positive feature.
+
+\stitle{Perturbation coverage.}
+We consider a broad set of structural, cell-level, layout, and numerical perturbations. Nevertheless, real non-relational tables contain additional phenomena that we do not fully model, such as visual alignment cues and chart-table mixtures. Although \name{} could be extended to cover those perturbations, the current benchmark does not stress the full range of document-table understanding.  We leave this as future work.
+It is not true that the benchmark omits all important visual or linguistic phenomena, nor that computational costs or solver runtimes render the approach impractical. 

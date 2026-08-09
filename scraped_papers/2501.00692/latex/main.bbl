@@ -1,0 +1,524 @@
+\begin{thebibliography}{69}
+\providecommand{\natexlab}[1]{#1}
+\providecommand{\url}[1]{\texttt{#1}}
+\expandafter\ifx\csname urlstyle\endcsname\relax
+  \providecommand{\doi}[1]{doi: #1}\else
+  \providecommand{\doi}{doi: \begingroup \urlstyle{rm}\Url}\fi
+
+\bibitem[Anthony et~al.(2024)Anthony, Tokpanov, Glorioso, and
+  Millidge]{anthony2024blackmambamixtureexpertsstatespace}
+Quentin Anthony, Yury Tokpanov, Paolo Glorioso, and Beren Millidge.
+\newblock Blackmamba: Mixture of experts for state-space models, 2024.
+\newblock URL \url{https://arxiv.org/abs/2402.01771}.
+
+\bibitem[Balestriero and
+  Baraniuk(2021)]{balestriero2021fastjacobianvectorproductdeep}
+Randall Balestriero and Richard Baraniuk.
+\newblock Fast jacobian-vector product for deep networks, 2021.
+\newblock URL \url{https://arxiv.org/abs/2104.00219}.
+
+\bibitem[Baydin et~al.(2018{\natexlab{a}})Baydin, Pearlmutter, Radul, and
+  Siskind]{baydin2018ad}
+Atilim~Gunes Baydin, Barak~A. Pearlmutter, Alexey~Andreyevich Radul, and
+  Jeffrey~Mark Siskind.
+\newblock Automatic differentiation in machine learning: a survey,
+  2018{\natexlab{a}}.
+\newblock URL \url{https://arxiv.org/abs/1502.05767}.
+
+\bibitem[Baydin et~al.(2018{\natexlab{b}})Baydin, Pearlmutter, Radul, and
+  Siskind]{baydin2018automaticdifferentiationmachinelearning}
+Atilim~Gunes Baydin, Barak~A. Pearlmutter, Alexey~Andreyevich Radul, and
+  Jeffrey~Mark Siskind.
+\newblock Automatic differentiation in machine learning: a survey,
+  2018{\natexlab{b}}.
+\newblock URL \url{https://arxiv.org/abs/1502.05767}.
+
+\bibitem[Beck et~al.(2024)Beck, Pöppel, Spanring, Auer, Prudnikova, Kopp,
+  Klambauer, Brandstetter, and Hochreiter]{beck2024xlstmextendedlongshortterm}
+Maximilian Beck, Korbinian Pöppel, Markus Spanring, Andreas Auer, Oleksandra
+  Prudnikova, Michael Kopp, Günter Klambauer, Johannes Brandstetter, and Sepp
+  Hochreiter.
+\newblock xlstm: Extended long short-term memory, 2024.
+\newblock URL \url{https://arxiv.org/abs/2405.04517}.
+
+\bibitem[Beltagy et~al.(2020)Beltagy, Peters, and
+  Cohan]{beltagy2020longformerlongdocumenttransformer}
+Iz~Beltagy, Matthew~E. Peters, and Arman Cohan.
+\newblock Longformer: The long-document transformer, 2020.
+\newblock URL \url{https://arxiv.org/abs/2004.05150}.
+
+\bibitem[Cai et~al.(2024)Cai, Cao, Chen, Chen, Chen, Chen,
+  et~al.]{cai2024internlm2technicalreport2}
+Zheng Cai, Maosong Cao, Haojiong Chen, Kai Chen, Keyu Chen, Xin Chen, et~al.
+\newblock Internlm2 technical report, 2024.
+\newblock URL \url{https://arxiv.org/abs/2403.17297}.
+
+\bibitem[Cao et~al.(2002)Cao, Li, and Petzold]{CAO2002171}
+Yang Cao, Shengtai Li, and Linda Petzold.
+\newblock Adjoint sensitivity analysis for differential-algebraic equations:
+  algorithms and software.
+\newblock \emph{Journal of Computational and Applied Mathematics}, 149\penalty0
+  (1):\penalty0 171--191, 2002.
+\newblock ISSN 0377-0427.
+\newblock \doi{https://doi.org/10.1016/S0377-0427(02)00528-9}.
+\newblock URL
+  \url{https://www.sciencedirect.com/science/article/pii/S0377042702005289}.
+\newblock Scientific and Engineering Computations for the 21st Century - Me
+  thodologies and Applications Proceedings of the 15th Toyota Conference.
+
+\bibitem[Chen et~al.(2019)Chen, Rubanova, Bettencourt, and
+  Duvenaud]{chen2019neuralordinarydifferentialequations}
+Ricky T.~Q. Chen, Yulia Rubanova, Jesse Bettencourt, and David Duvenaud.
+\newblock Neural ordinary differential equations, 2019.
+\newblock URL \url{https://arxiv.org/abs/1806.07366}.
+
+\bibitem[Chen et~al.(2023)Chen, Wong, Chen, and
+  Tian]{chen2023extendingcontextwindowlarge}
+Shouyuan Chen, Sherman Wong, Liangjian Chen, and Yuandong Tian.
+\newblock Extending context window of large language models via positional
+  interpolation, 2023.
+\newblock URL \url{https://arxiv.org/abs/2306.15595}.
+
+\bibitem[Chen et~al.(2024)Chen, Qian, Tang, Lai, Liu, Han, and
+  Jia]{chen2024longloraefficientfinetuninglongcontext}
+Yukang Chen, Shengju Qian, Haotian Tang, Xin Lai, Zhijian Liu, Song Han, and
+  Jiaya Jia.
+\newblock Longlora: Efficient fine-tuning of long-context large language
+  models, 2024.
+\newblock URL \url{https://arxiv.org/abs/2309.12307}.
+
+\bibitem[Damadi et~al.(2023)Damadi, Moharrer, and
+  Cham]{damadi2023backpropagationalgorithmmathstudent}
+Saeed Damadi, Golnaz Moharrer, and Mostafa Cham.
+\newblock The backpropagation algorithm for a math student, 2023.
+\newblock URL \url{https://arxiv.org/abs/2301.09977}.
+
+\bibitem[Dao(2023)]{dao2023flashattention2fasterattentionbetter}
+Tri Dao.
+\newblock Flashattention-2: Faster attention with better parallelism and work
+  partitioning, 2023.
+\newblock URL \url{https://arxiv.org/abs/2307.08691}.
+
+\bibitem[Dao and Gu(2024{\natexlab{a}})]{dao2024mamba2}
+Tri Dao and Albert Gu.
+\newblock Transformers are ssms: Generalized models and efficient algorithms
+  through structured state space duality, 2024{\natexlab{a}}.
+\newblock URL \url{https://arxiv.org/abs/2405.21060}.
+
+\bibitem[Dao and
+  Gu(2024{\natexlab{b}})]{dao2024transformersssmsgeneralizedmodels}
+Tri Dao and Albert Gu.
+\newblock Transformers are ssms: Generalized models and efficient algorithms
+  through structured state space duality, 2024{\natexlab{b}}.
+\newblock URL \url{https://arxiv.org/abs/2405.21060}.
+
+\bibitem[Dao et~al.(2022)Dao, Fu, Ermon, Rudra, and
+  Ré]{dao2022flashattentionfastmemoryefficientexact}
+Tri Dao, Daniel~Y. Fu, Stefano Ermon, Atri Rudra, and Christopher Ré.
+\newblock Flashattention: Fast and memory-efficient exact attention with
+  io-awareness, 2022.
+\newblock URL \url{https://arxiv.org/abs/2205.14135}.
+
+\bibitem[De et~al.(2024)De, Smith, Fernando, Botev, Cristian-Muraru, Gu,
+  Haroun, Berrada, Chen, Srinivasan, Desjardins, Doucet, Budden, Teh, Pascanu,
+  Freitas, and Gulcehre]{de2024griffinmixinggatedlinear}
+Soham De, Samuel~L. Smith, Anushan Fernando, Aleksandar Botev, George
+  Cristian-Muraru, Albert Gu, Ruba Haroun, Leonard Berrada, Yutian Chen,
+  Srivatsan Srinivasan, Guillaume Desjardins, Arnaud Doucet, David Budden,
+  Yee~Whye Teh, Razvan Pascanu, Nando~De Freitas, and Caglar Gulcehre.
+\newblock Griffin: Mixing gated linear recurrences with local attention for
+  efficient language models, 2024.
+\newblock URL \url{https://arxiv.org/abs/2402.19427}.
+
+\bibitem[Ding et~al.(2024{\natexlab{a}})Ding, Zhang, Zhang, Xu, Shang, Xu,
+  Yang, and Yang]{ding2024longrope}
+Yiran Ding, Li~Lyna Zhang, Chengruidong Zhang, Yuanyuan Xu, Ning Shang, Jiahang
+  Xu, Fan Yang, and Mao Yang.
+\newblock Longrope: Extending llm context window beyond 2 million tokens.
+\newblock \emph{arXiv preprint arXiv:2402.13753}, 2024{\natexlab{a}}.
+
+\bibitem[Ding et~al.(2024{\natexlab{b}})Ding, Zhang, Zhang, Xu, Shang, Xu,
+  Yang, and Yang]{ding2024longropeextendingllmcontext}
+Yiran Ding, Li~Lyna Zhang, Chengruidong Zhang, Yuanyuan Xu, Ning Shang, Jiahang
+  Xu, Fan Yang, and Mao Yang.
+\newblock Longrope: Extending llm context window beyond 2 million tokens,
+  2024{\natexlab{b}}.
+\newblock URL \url{https://arxiv.org/abs/2402.13753}.
+
+\bibitem[Dupont et~al.(2019)Dupont, Doucet, and
+  Teh]{dupont2019augmentedneuralodes}
+Emilien Dupont, Arnaud Doucet, and Yee~Whye Teh.
+\newblock Augmented neural odes, 2019.
+\newblock URL \url{https://arxiv.org/abs/1904.01681}.
+
+\bibitem[Fu et~al.(2023)Fu, Dao, Saab, Thomas, Rudra, and
+  Ré]{fu2023hungryhungryhipposlanguage}
+Daniel~Y. Fu, Tri Dao, Khaled~K. Saab, Armin~W. Thomas, Atri Rudra, and
+  Christopher Ré.
+\newblock Hungry hungry hippos: Towards language modeling with state space
+  models, 2023.
+\newblock URL \url{https://arxiv.org/abs/2212.14052}.
+
+\bibitem[Gu and Dao(2024{\natexlab{a}})]{gu2024mamba1}
+Albert Gu and Tri Dao.
+\newblock Mamba: Linear-time sequence modeling with selective state spaces,
+  2024{\natexlab{a}}.
+\newblock URL \url{https://arxiv.org/abs/2312.00752}.
+
+\bibitem[Gu and Dao(2024{\natexlab{b}})]{gu2024mambalineartimesequencemodeling}
+Albert Gu and Tri Dao.
+\newblock Mamba: Linear-time sequence modeling with selective state spaces,
+  2024{\natexlab{b}}.
+\newblock URL \url{https://arxiv.org/abs/2312.00752}.
+
+\bibitem[Gu et~al.(2021)Gu, Johnson, Goel, Saab, Dao, Rudra, and
+  Ré]{gu2021combiningrecurrentconvolutionalcontinuoustime}
+Albert Gu, Isys Johnson, Karan Goel, Khaled Saab, Tri Dao, Atri Rudra, and
+  Christopher Ré.
+\newblock Combining recurrent, convolutional, and continuous-time models with
+  linear state-space layers, 2021.
+\newblock URL \url{https://arxiv.org/abs/2110.13985}.
+
+\bibitem[Gu et~al.(2022)Gu, Johnson, Timalsina, Rudra, and
+  Ré]{gu2022trainhippostatespace}
+Albert Gu, Isys Johnson, Aman Timalsina, Atri Rudra, and Christopher Ré.
+\newblock How to train your hippo: State space models with generalized
+  orthogonal basis projections, 2022.
+\newblock URL \url{https://arxiv.org/abs/2206.12037}.
+
+\bibitem[Guo et~al.(2022)Guo, Xu, Liu, Liu, Jiang, Mu, Zhang, Martin, Cheng,
+  and Hu]{guo2022attention}
+Meng-Hao Guo, Tian-Xing Xu, Jiang-Jiang Liu, Zheng-Ning Liu, Peng-Tao Jiang,
+  Tai-Jiang Mu, Song-Hai Zhang, Ralph~R Martin, Ming-Ming Cheng, and Shi-Min
+  Hu.
+\newblock Attention mechanisms in computer vision: A survey.
+\newblock \emph{Computational visual media}, 8\penalty0 (3):\penalty0 331--368,
+  2022.
+
+\bibitem[Gupta et~al.(2023)Gupta, Mehta, and
+  Berant]{gupta2023simplifyingunderstandingstatespace}
+Ankit Gupta, Harsh Mehta, and Jonathan Berant.
+\newblock Simplifying and understanding state space models with diagonal linear
+  rnns, 2023.
+\newblock URL \url{https://arxiv.org/abs/2212.00768}.
+
+\bibitem[He et~al.(2015)He, Zhang, Ren, and
+  Sun]{he2015deepresiduallearningimage}
+Kaiming He, Xiangyu Zhang, Shaoqing Ren, and Jian Sun.
+\newblock Deep residual learning for image recognition, 2015.
+\newblock URL \url{https://arxiv.org/abs/1512.03385}.
+
+\bibitem[He et~al.(2016)He, Zhang, Ren, and Sun]{He_2016_CVPR}
+Kaiming He, Xiangyu Zhang, Shaoqing Ren, and Jian Sun.
+\newblock Deep residual learning for image recognition.
+\newblock In \emph{Proceedings of the IEEE Conference on Computer Vision and
+  Pattern Recognition (CVPR)}, June 2016.
+
+\bibitem[Herrmann et~al.(2019)Herrmann, Beaumont, Eyraud-Dubois, Hermann, Joly,
+  and Shilova]{herrmann2019optimalcheckpointingheterogeneouschains}
+Julien Herrmann, Olivier Beaumont, Lionel Eyraud-Dubois, Julien Hermann, Alexis
+  Joly, and Alena Shilova.
+\newblock Optimal checkpointing for heterogeneous chains: how to train deep
+  neural networks with limited memory, 2019.
+\newblock URL \url{https://arxiv.org/abs/1911.13214}.
+
+\bibitem[Jaeger(2005)]{Jaeger2005ATO}
+Herbert Jaeger.
+\newblock A tutorial on training recurrent neural networks , covering bppt ,
+  rtrl , ekf and the " echo state network " approach - semantic scholar.
+\newblock In \emph{National Research Center for Information Technology, 2002},
+  2005.
+\newblock URL \url{https://api.semanticscholar.org/CorpusID:192593367}.
+
+\bibitem[Johnson(2007)]{adjointjohnson2007}
+Steven Johnson.
+\newblock Adjoint methods and sensitivity analysis for recurrence, 01 2007.
+
+\bibitem[Kaul(2020)]{NEURIPS2020_c3581d21}
+Shiva Kaul.
+\newblock Linear dynamical systems as a core computational primitive.
+\newblock In H.~Larochelle, M.~Ranzato, R.~Hadsell, M.F. Balcan, and H.~Lin,
+  editors, \emph{Advances in Neural Information Processing Systems}, volume~33,
+  pages 16808--16820. Curran Associates, Inc., 2020.
+\newblock URL
+  \url{https://proceedings.neurips.cc/paper_files/paper/2020/file/c3581d2150ff68f3b33b22634b8adaea-Paper.pdf}.
+
+\bibitem[Kirillov et~al.(2023)Kirillov, Mintun, Ravi, Mao, Rolland, Gustafson,
+  Xiao, Whitehead, Berg, Lo, et~al.]{kirillov2023segment}
+Alexander Kirillov, Eric Mintun, Nikhila Ravi, Hanzi Mao, Chloe Rolland, Laura
+  Gustafson, Tete Xiao, Spencer Whitehead, Alexander~C Berg, Wan-Yen Lo, et~al.
+\newblock Segment anything.
+\newblock In \emph{Proceedings of the IEEE/CVF International Conference on
+  Computer Vision}, pages 4015--4026, 2023.
+
+\bibitem[Li* et~al.(2023)Li*, Shao*, Xie, Sheng, Zheng, Gonzalez, Stoica, Ma,
+  and Zhang]{longchat2023}
+Dacheng Li*, Rulin Shao*, Anze Xie, Ying Sheng, Lianmin Zheng, Joseph~E.
+  Gonzalez, Ion Stoica, Xuezhe Ma, and Hao Zhang.
+\newblock How long can open-source llms truly promise on context length?, June
+  2023.
+\newblock URL \url{https://lmsys.org/blog/2023-06-29-longchat}.
+
+\bibitem[Li et~al.(2024)Li, Zhang, Do, Yue, and
+  Chen]{li2024longcontextllmsstrugglelong}
+Tianle Li, Ge~Zhang, Quy~Duc Do, Xiang Yue, and Wenhu Chen.
+\newblock Long-context llms struggle with long in-context learning, 2024.
+\newblock URL \url{https://arxiv.org/abs/2404.02060}.
+
+\bibitem[Lieber et~al.(2024)Lieber, Lenz, Bata, Cohen, Osin, Dalmedigos,
+  Safahi, Meirom, Belinkov, Shalev-Shwartz, Abend, Alon, Asida, Bergman,
+  Glozman, Gokhman, Manevich, Ratner, Rozen, Shwartz, Zusman, and
+  Shoham]{lieber2024jambahybridtransformermambalanguage}
+Opher Lieber, Barak Lenz, Hofit Bata, Gal Cohen, Jhonathan Osin, Itay
+  Dalmedigos, Erez Safahi, Shaked Meirom, Yonatan Belinkov, Shai
+  Shalev-Shwartz, Omri Abend, Raz Alon, Tomer Asida, Amir Bergman, Roman
+  Glozman, Michael Gokhman, Avashalom Manevich, Nir Ratner, Noam Rozen, Erez
+  Shwartz, Mor Zusman, and Yoav Shoham.
+\newblock Jamba: A hybrid transformer-mamba language model, 2024.
+\newblock URL \url{https://arxiv.org/abs/2403.19887}.
+
+\bibitem[Liu et~al.(2023)Liu, Zaharia, and
+  Abbeel]{liu2023ringattentionblockwisetransformers}
+Hao Liu, Matei Zaharia, and Pieter Abbeel.
+\newblock Ring attention with blockwise transformers for near-infinite context,
+  2023.
+\newblock URL \url{https://arxiv.org/abs/2310.01889}.
+
+\bibitem[Liu et~al.(2024)Liu, Yan, Zaharia, and
+  Abbeel]{liu2024worldmodelmillionlengthvideo}
+Hao Liu, Wilson Yan, Matei Zaharia, and Pieter Abbeel.
+\newblock World model on million-length video and language with blockwise
+  ringattention, 2024.
+\newblock URL \url{https://arxiv.org/abs/2402.08268}.
+
+\bibitem[Meta et~al.(2024)]{dubey2024llama3herdmodels2}
+Meta et~al.
+\newblock The llama 3 herd of models, 2024.
+\newblock URL \url{https://arxiv.org/abs/2407.21783}.
+
+\bibitem[Micikevicius et~al.(2018)Micikevicius, Narang, Alben, Diamos, Elsen,
+  Garcia, Ginsburg, Houston, Kuchaiev, Venkatesh, and
+  Wu]{micikevicius2018mixedprecisiontraining}
+Paulius Micikevicius, Sharan Narang, Jonah Alben, Gregory Diamos, Erich Elsen,
+  David Garcia, Boris Ginsburg, Michael Houston, Oleksii Kuchaiev, Ganesh
+  Venkatesh, and Hao Wu.
+\newblock Mixed precision training, 2018.
+\newblock URL \url{https://arxiv.org/abs/1710.03740}.
+
+\bibitem[Novak et~al.(2022)Novak, Sohl-Dickstein, and
+  Schoenholz]{novak2022fastfinitewidthneural}
+Roman Novak, Jascha Sohl-Dickstein, and Samuel~S. Schoenholz.
+\newblock Fast finite width neural tangent kernel, 2022.
+\newblock URL \url{https://arxiv.org/abs/2206.08720}.
+
+\bibitem[NVIDIA(2024)]{nvidiamvp}
+NVIDIA.
+\newblock Matrix multiplication background user's guide, 2024.
+\newblock URL
+  \url{https://docs.nvidia.com/deeplearning/performance/dl-performance-matrix-multiplication/index.html}.
+
+\bibitem[OpenAI et~al.(2024)]{openai2024gpt4technicalreport2}
+OpenAI et~al.
+\newblock Gpt-4 technical report, 2024.
+\newblock URL \url{https://arxiv.org/abs/2303.08774}.
+
+\bibitem[Orvieto et~al.(2023)Orvieto, Smith, Gu, Fernando, Gulcehre, Pascanu,
+  and De]{orvieto2023resurrectingrecurrentneuralnetworks}
+Antonio Orvieto, Samuel~L Smith, Albert Gu, Anushan Fernando, Caglar Gulcehre,
+  Razvan Pascanu, and Soham De.
+\newblock Resurrecting recurrent neural networks for long sequences, 2023.
+\newblock URL \url{https://arxiv.org/abs/2303.06349}.
+
+\bibitem[Pascanu et~al.(2013)Pascanu, Mikolov, and
+  Bengio]{pascanu2013difficultytrainingrecurrentneural}
+Razvan Pascanu, Tomas Mikolov, and Yoshua Bengio.
+\newblock On the difficulty of training recurrent neural networks, 2013.
+\newblock URL \url{https://arxiv.org/abs/1211.5063}.
+
+\bibitem[Paszke et~al.(2019)Paszke, Gross, Massa, Lerer, Bradbury, Chanan,
+  Killeen, Lin, Gimelshein, Antiga, Desmaison, Köpf, Yang, DeVito, Raison,
+  Tejani, Chilamkurthy, Steiner, Fang, Bai, and
+  Chintala]{paszke2019pytorchimperativestylehighperformance}
+Adam Paszke, Sam Gross, Francisco Massa, Adam Lerer, James Bradbury, Gregory
+  Chanan, Trevor Killeen, Zeming Lin, Natalia Gimelshein, Luca Antiga, Alban
+  Desmaison, Andreas Köpf, Edward Yang, Zach DeVito, Martin Raison, Alykhan
+  Tejani, Sasank Chilamkurthy, Benoit Steiner, Lu~Fang, Junjie Bai, and Soumith
+  Chintala.
+\newblock Pytorch: An imperative style, high-performance deep learning library,
+  2019.
+\newblock URL \url{https://arxiv.org/abs/1912.01703}.
+
+\bibitem[Peebles and Xie(2023)]{peebles2023scalable}
+William Peebles and Saining Xie.
+\newblock Scalable diffusion models with transformers.
+\newblock In \emph{Proceedings of the IEEE/CVF International Conference on
+  Computer Vision}, pages 4195--4205, 2023.
+
+\bibitem[Peng et~al.(2023{\natexlab{a}})Peng, Alcaide, Anthony, Albalak,
+  Arcadinho, Biderman, Cao, Cheng, Chung, Grella, GV, He, Hou, Lin, Kazienko,
+  Kocon, Kong, Koptyra, Lau, Mantri, Mom, Saito, Song, Tang, Wang, Wind,
+  Wozniak, Zhang, Zhang, Zhao, Zhou, Zhou, Zhu, and
+  Zhu]{peng2023rwkvreinventingrnnstransformer}
+Bo~Peng, Eric Alcaide, Quentin Anthony, Alon Albalak, Samuel Arcadinho, Stella
+  Biderman, Huanqi Cao, Xin Cheng, Michael Chung, Matteo Grella, Kranthi~Kiran
+  GV, Xuzheng He, Haowen Hou, Jiaju Lin, Przemyslaw Kazienko, Jan Kocon,
+  Jiaming Kong, Bartlomiej Koptyra, Hayden Lau, Krishna Sri~Ipsit Mantri,
+  Ferdinand Mom, Atsushi Saito, Guangyu Song, Xiangru Tang, Bolun Wang,
+  Johan~S. Wind, Stanislaw Wozniak, Ruichong Zhang, Zhenyuan Zhang, Qihang
+  Zhao, Peng Zhou, Qinghua Zhou, Jian Zhu, and Rui-Jie Zhu.
+\newblock Rwkv: Reinventing rnns for the transformer era, 2023{\natexlab{a}}.
+\newblock URL \url{https://arxiv.org/abs/2305.13048}.
+
+\bibitem[Peng et~al.(2023{\natexlab{b}})Peng, Quesnelle, Fan, and
+  Shippole]{peng2023yarnefficientcontextwindow}
+Bowen Peng, Jeffrey Quesnelle, Honglu Fan, and Enrico Shippole.
+\newblock Yarn: Efficient context window extension of large language models,
+  2023{\natexlab{b}}.
+\newblock URL \url{https://arxiv.org/abs/2309.00071}.
+
+\bibitem[Pióro et~al.(2024)Pióro, Ciebiera, Król, Ludziejewski, Krutul,
+  Krajewski, Antoniak, Miłoś, Cygan, and
+  Jaszczur]{pióro2024moemambaefficientselectivestate}
+Maciej Pióro, Kamil Ciebiera, Krystian Król, Jan Ludziejewski, Michał
+  Krutul, Jakub Krajewski, Szymon Antoniak, Piotr Miłoś, Marek Cygan, and
+  Sebastian Jaszczur.
+\newblock Moe-mamba: Efficient selective state space models with mixture of
+  experts, 2024.
+\newblock URL \url{https://arxiv.org/abs/2401.04081}.
+
+\bibitem[Rajbhandari et~al.(2020{\natexlab{a}})Rajbhandari, Rasley, Ruwase, and
+  He]{rajbhandari2020zero}
+Samyam Rajbhandari, Jeff Rasley, Olatunji Ruwase, and Yuxiong He.
+\newblock Zero: Memory optimizations toward training trillion parameter models,
+  2020{\natexlab{a}}.
+\newblock URL \url{https://arxiv.org/abs/1910.02054}.
+
+\bibitem[Rajbhandari et~al.(2020{\natexlab{b}})Rajbhandari, Rasley, Ruwase, and
+  He]{rajbhandari2020zeromemoryoptimizationstraining}
+Samyam Rajbhandari, Jeff Rasley, Olatunji Ruwase, and Yuxiong He.
+\newblock Zero: Memory optimizations toward training trillion parameter models,
+  2020{\natexlab{b}}.
+\newblock URL \url{https://arxiv.org/abs/1910.02054}.
+
+\bibitem[Ren et~al.(2021)Ren, Rajbhandari, Aminabadi, Ruwase, Yang, Zhang, Li,
+  and He]{ren2021zerooffloaddemocratizingbillionscalemodel}
+Jie Ren, Samyam Rajbhandari, Reza~Yazdani Aminabadi, Olatunji Ruwase, Shuangyan
+  Yang, Minjia Zhang, Dong Li, and Yuxiong He.
+\newblock Zero-offload: Democratizing billion-scale model training, 2021.
+\newblock URL \url{https://arxiv.org/abs/2101.06840}.
+
+\bibitem[Shah et~al.(2024)Shah, Bikshandi, Zhang, Thakkar, Ramani, and
+  Dao]{shah2024flashattention3fastaccurateattention}
+Jay Shah, Ganesh Bikshandi, Ying Zhang, Vijay Thakkar, Pradeep Ramani, and Tri
+  Dao.
+\newblock Flashattention-3: Fast and accurate attention with asynchrony and
+  low-precision, 2024.
+\newblock URL \url{https://arxiv.org/abs/2407.08608}.
+
+\bibitem[Sohoni et~al.(2022)Sohoni, Aberger, Leszczynski, Zhang, and
+  Ré]{sohoni2022lowmemoryneuralnetworktraining}
+Nimit~S. Sohoni, Christopher~R. Aberger, Megan Leszczynski, Jian Zhang, and
+  Christopher Ré.
+\newblock Low-memory neural network training: A technical report, 2022.
+\newblock URL \url{https://arxiv.org/abs/1904.10631}.
+
+\bibitem[Tallec and
+  Ollivier(2017)]{tallec2017unbiasingtruncatedbackpropagationtime}
+Corentin Tallec and Yann Ollivier.
+\newblock Unbiasing truncated backpropagation through time, 2017.
+\newblock URL \url{https://arxiv.org/abs/1705.08209}.
+
+\bibitem[Tworkowski et~al.(2023)Tworkowski, Staniszewski, Pacek, Wu,
+  Michalewski, and
+  Miłoś]{tworkowski2023focusedtransformercontrastivetraining}
+Szymon Tworkowski, Konrad Staniszewski, Mikołaj Pacek, Yuhuai Wu, Henryk
+  Michalewski, and Piotr Miłoś.
+\newblock Focused transformer: Contrastive training for context scaling, 2023.
+\newblock URL \url{https://arxiv.org/abs/2307.03170}.
+
+\bibitem[users(2023)]{ntkReddit2023}
+Reddit users.
+\newblock Ntk-aware scaled rope, 2023.
+\newblock URL \url{https://www.reddit.com/r/LocalLLaMA/comments/
+  14lz7j5/ntkaware_scaled_rope_allows_llama_models_to_have/.}
+
+\bibitem[Vaswani et~al.(2023)Vaswani, Shazeer, Parmar, Uszkoreit, Jones, Gomez,
+  Kaiser, and Polosukhin]{vaswani2023attentionneed}
+Ashish Vaswani, Noam Shazeer, Niki Parmar, Jakob Uszkoreit, Llion Jones,
+  Aidan~N. Gomez, Lukasz Kaiser, and Illia Polosukhin.
+\newblock Attention is all you need, 2023.
+\newblock URL \url{https://arxiv.org/abs/1706.03762}.
+
+\bibitem[Verbraeken et~al.(2020)Verbraeken, Wolting, Katzy, Kloppenburg,
+  Verbelen, and Rellermeyer]{Verbraeken_2020}
+Joost Verbraeken, Matthijs Wolting, Jonathan Katzy, Jeroen Kloppenburg, Tim
+  Verbelen, and Jan~S. Rellermeyer.
+\newblock A survey on distributed machine learning.
+\newblock \emph{ACM Computing Surveys}, 53\penalty0 (2):\penalty0 1–33, March
+  2020.
+\newblock ISSN 1557-7341.
+\newblock \doi{10.1145/3377454}.
+\newblock URL \url{http://dx.doi.org/10.1145/3377454}.
+
+\bibitem[Waleffe et~al.(2024)Waleffe, Byeon, Riach, Norick, Korthikanti, Dao,
+  Gu, Hatamizadeh, Singh, Narayanan, Kulshreshtha, Singh, Casper, Kautz,
+  Shoeybi, and Catanzaro]{waleffe2024empiricalstudymambabasedlanguage}
+Roger Waleffe, Wonmin Byeon, Duncan Riach, Brandon Norick, Vijay Korthikanti,
+  Tri Dao, Albert Gu, Ali Hatamizadeh, Sudhakar Singh, Deepak Narayanan, Garvit
+  Kulshreshtha, Vartika Singh, Jared Casper, Jan Kautz, Mohammad Shoeybi, and
+  Bryan Catanzaro.
+\newblock An empirical study of mamba-based language models, 2024.
+\newblock URL \url{https://arxiv.org/abs/2406.07887}.
+
+\bibitem[Wang and Xue(2023)]{wang2023statespacemodelslayerwisenonlinearity}
+Shida Wang and Beichen Xue.
+\newblock State-space models with layer-wise nonlinearity are universal
+  approximators with exponential decaying memory, 2023.
+\newblock URL \url{https://arxiv.org/abs/2309.13414}.
+
+\bibitem[Werbos(1990)]{bptt}
+P.J. Werbos.
+\newblock Backpropagation through time: what it does and how to do it.
+\newblock \emph{Proceedings of the IEEE}, 78\penalty0 (10):\penalty0
+  1550--1560, 1990.
+\newblock \doi{10.1109/5.58337}.
+
+\bibitem[Xiao et~al.(2024)Xiao, Tian, Chen, Han, and
+  Lewis]{xiao2024efficientstreaminglanguagemodels}
+Guangxuan Xiao, Yuandong Tian, Beidi Chen, Song Han, and Mike Lewis.
+\newblock Efficient streaming language models with attention sinks, 2024.
+\newblock URL \url{https://arxiv.org/abs/2309.17453}.
+
+\bibitem[Xu et~al.(2022)Xu, Hasan, Elkhalil, Ding, and
+  Tarokh]{xu2022characteristicneuralordinarydifferential}
+Xingzi Xu, Ali Hasan, Khalil Elkhalil, Jie Ding, and Vahid Tarokh.
+\newblock Characteristic neural ordinary differential equations, 2022.
+\newblock URL \url{https://arxiv.org/abs/2111.13207}.
+
+\bibitem[Yang et~al.(2021)Yang, Li, Zhang, Dai, Xiao, Yuan, and
+  Gao]{yang2021focal}
+Jianwei Yang, Chunyuan Li, Pengchuan Zhang, Xiyang Dai, Bin Xiao, Lu~Yuan, and
+  Jianfeng Gao.
+\newblock Focal self-attention for local-global interactions in vision
+  transformers, 2021.
+\newblock URL \url{https://arxiv.org/abs/2107.00641}.
+
+\bibitem[Zhang et~al.(2024)Zhang, Liu, Xiao, Shao, Ye, and
+  Dou]{zhang2024soaring4k400kextending}
+Peitian Zhang, Zheng Liu, Shitao Xiao, Ninglu Shao, Qiwei Ye, and Zhicheng Dou.
+\newblock Soaring from 4k to 400k: Extending llm's context with activation
+  beacon, 2024.
+\newblock URL \url{https://arxiv.org/abs/2401.03462}.
+
+\bibitem[Zhao et~al.(2023)Zhao, Gu, Varma, Luo, Huang, Xu, Wright, Shojanazeri,
+  Ott, Shleifer, Desmaison, Balioglu, Damania, Nguyen, Chauhan, Hao, Mathews,
+  and Li]{zhao2023pytorchfsdpexperiencesscaling}
+Yanli Zhao, Andrew Gu, Rohan Varma, Liang Luo, Chien-Chin Huang, Min Xu, Less
+  Wright, Hamid Shojanazeri, Myle Ott, Sam Shleifer, Alban Desmaison, Can
+  Balioglu, Pritam Damania, Bernard Nguyen, Geeta Chauhan, Yuchen Hao, Ajit
+  Mathews, and Shen Li.
+\newblock Pytorch fsdp: Experiences on scaling fully sharded data parallel,
+  2023.
+\newblock URL \url{https://arxiv.org/abs/2304.11277}.
+
+\end{thebibliography}

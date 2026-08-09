@@ -1,0 +1,112 @@
+\relax 
+\bibstyle{acl_natbib}
+\providecommand\hyper@newdestlabel[2]{}
+\providecommand\HyField@AuxAddToFields[1]{}
+\providecommand\HyField@AuxAddToCoFields[2]{}
+\citation{thoppilan2022lamda,chowdhery2023palm,brown2020language}
+\citation{brown2020language}
+\citation{achiam2023gpt}
+\citation{dziri2024faith}
+\citation{yuan2023well,brown2020language,dziri2024faith}
+\citation{srivastava2023beyond}
+\citation{thawani2021representing}
+\citation{mcleish2024transformers}
+\citation{liu2023goatfinetunedllamaoutperforms}
+\citation{wei2023chainofthoughtpromptingelicitsreasoning}
+\citation{schick2023toolformerlanguagemodelsteach}
+\@writefile{toc}{\contentsline {section}{\numberline {1}Introduction}{1}{section.1}\protected@file@percent }
+\@writefile{lof}{\contentsline {figure}{\numberline {1}{\ignorespaces Examples of arithmetic tasks. }}{1}{figure.caption.1}\protected@file@percent }
+\providecommand*\caption@xref[2]{\@setref\relax\@undefined{#1}}
+\newlabel{fig:training_templates}{{1}{1}{Examples of arithmetic tasks}{figure.caption.1}{}}
+\citation{touvron2023llama,dubey2024llama}
+\citation{schick2023toolformerlanguagemodelsteach,cobbe2021gsm8k,gao2023pal}
+\citation{nye2021show,chung2024scaling}
+\citation{lee2023teachingarithmeticsmalltransformers}
+\citation{schick2023toolformerlanguagemodelsteach}
+\citation{qu2024tool}
+\citation{cobbe2021gsm8k}
+\citation{nye2021show}
+\citation{imani2023mathpromptermathematicalreasoningusing}
+\citation{chen2022program}
+\citation{gao2023pal}
+\citation{ding2022delta}
+\citation{houlsby2019parameter}
+\@writefile{toc}{\contentsline {section}{\numberline {2}Related Work}{2}{section.2}\protected@file@percent }
+\citation{wang2019gluemultitaskbenchmarkanalysis,houlsby2019parameter}
+\@writefile{lof}{\contentsline {figure}{\numberline {2}{\ignorespaces  \textbf  {Left}. The IGC is inserted into a pretrained LLM after a fixed layer, in this case layer 1. It modifies the output produced by that layer. \textbf  {Right}. During training, the IGC takes the latent activations produced by the layer as its inputs and splits them into two parts: Before and after the anchor token $T_t$ at time step $t$, which has a special role for argument selection. The IGC comprises three components, two of which are trainable submodules: The Input Mapping submodule (Figure~\ref {fig:architecture-details}, left) uses the tokens before $T_t$ to extract the arithmetic task from the text and to format it for the calculator. It is trained through an auxiliary loss. The calculator itself is emulated on the GPU through a sequence of non-differentiable tensor operations. It is not a trainable component. The Output Mapping submodule (Figure~\ref {fig:architecture-details}, right) uses the results of the calculator to modify the tokens after $T_t$. It is trained by the LLM's normal loss function. Note that this image shows the training process using teacher forcing. During inference, the Input Mapping and the calculator are executed only on the iteration when the anchor token arrives. Their outputs are cached and reused on subsequent iterations. }}{3}{figure.caption.2}\protected@file@percent }
+\newlabel{fig:architecture-main}{{2}{3}{\textbf {Left}. The IGC is inserted into a pretrained LLM after a fixed layer, in this case layer 1. It modifies the output produced by that layer. \textbf {Right}. During training, the IGC takes the latent activations produced by the layer as its inputs and splits them into two parts: Before and after the anchor token $T_t$ at time step $t$, which has a special role for argument selection. The IGC comprises three components, two of which are trainable submodules: The Input Mapping submodule (Figure~\ref {fig:architecture-details}, left) uses the tokens before $T_t$ to extract the arithmetic task from the text and to format it for the calculator. It is trained through an auxiliary loss. The calculator itself is emulated on the GPU through a sequence of non-differentiable tensor operations. It is not a trainable component. The Output Mapping submodule (Figure~\ref {fig:architecture-details}, right) uses the results of the calculator to modify the tokens after $T_t$. It is trained by the LLM's normal loss function. Note that this image shows the training process using teacher forcing. During inference, the Input Mapping and the calculator are executed only on the iteration when the anchor token arrives. Their outputs are cached and reused on subsequent iterations}{figure.caption.2}{}}
+\@writefile{toc}{\contentsline {section}{\numberline {3}Methods}{3}{section.3}\protected@file@percent }
+\newlabel{section-methods}{{3}{3}{Methods}{section.3}{}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {3.1}Main Considerations}{3}{subsection.3.1}\protected@file@percent }
+\citation{schick2023toolformerlanguagemodelsteach}
+\@writefile{lof}{\contentsline {figure}{\numberline {3}{\ignorespaces  \textbf  {Left}. The Input Mapping submodule takes variable-length textual embeddings and extracts the numbers and operator as fixed-length categorical data. The operands and operator are produced as probability distributions over possible digit values for each digit. \textbf  {Calculator (not shown)}. The calculator discretizes the distributions produced by the Input Mapping submodule by sampling the most probable number and operator. It then emulates the arithmetic operation. The resulting number is formatted using one-hot encoding. \textbf  {Right}. The Output Mapping submodule uses the fixed-length output of the calculator to modify each of the output tokens. This uses a separate learned gating weight for each token so that it can easily learn to leave tokens unchanged. }}{4}{figure.caption.3}\protected@file@percent }
+\newlabel{fig:architecture-details}{{3}{4}{\textbf {Left}. The Input Mapping submodule takes variable-length textual embeddings and extracts the numbers and operator as fixed-length categorical data. The operands and operator are produced as probability distributions over possible digit values for each digit. \textbf {Calculator (not shown)}. The calculator discretizes the distributions produced by the Input Mapping submodule by sampling the most probable number and operator. It then emulates the arithmetic operation. The resulting number is formatted using one-hot encoding. \textbf {Right}. The Output Mapping submodule uses the fixed-length output of the calculator to modify each of the output tokens. This uses a separate learned gating weight for each token so that it can easily learn to leave tokens unchanged}{figure.caption.3}{}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {3.2}Training Method}{4}{subsection.3.2}\protected@file@percent }
+\newlabel{section-methods-training}{{3.2}{4}{Training Method}{subsection.3.2}{}}
+\citation{kim2021have,ding2022delta,liu2023goatfinetunedllamaoutperforms,tweet2024garrethlee}
+\citation{yuan2023well,liu2023goatfinetunedllamaoutperforms}
+\citation{dubey2024llama}
+\citation{srivastava2023beyond}
+\citation{chowdhery2023palm}
+\@writefile{toc}{\contentsline {subsection}{\numberline {3.3}Implementation Details}{5}{subsection.3.3}\protected@file@percent }
+\@writefile{toc}{\contentsline {section}{\numberline {4}Experiments}{5}{section.4}\protected@file@percent }
+\newlabel{section-experiments}{{4}{5}{Experiments}{section.4}{}}
+\@writefile{lot}{\contentsline {table}{\numberline {1}{\ignorespaces  The accuracy of different models on the BigBench Arithmetic benchmark. The two columns about n-shot methods were extracted from official benchmark results, while the two finetuned variants were trained by us. We report the averages for the finetuned models and the best value for any $n$ for the n-shot benchmarks. Despite this lopsided comparison, our model still outperforms everything else. }}{7}{table.caption.4}\protected@file@percent }
+\newlabel{tab:performance_comparison}{{1}{7}{The accuracy of different models on the BigBench Arithmetic benchmark. The two columns about n-shot methods were extracted from official benchmark results, while the two finetuned variants were trained by us. We report the averages for the finetuned models and the best value for any $n$ for the n-shot benchmarks. Despite this lopsided comparison, our model still outperforms everything else}{table.caption.4}{}}
+\@writefile{lof}{\contentsline {figure}{\numberline {4}{\ignorespaces  The accuracy of various architectures on the BigBench Arithmetic benchmark as training proceeds. Multiple lines with the same color correspond to different random seeds for the same architecture. }}{7}{figure.caption.5}\protected@file@percent }
+\newlabel{fig:convergence-behavior}{{4}{7}{The accuracy of various architectures on the BigBench Arithmetic benchmark as training proceeds. Multiple lines with the same color correspond to different random seeds for the same architecture}{figure.caption.5}{}}
+\@writefile{toc}{\contentsline {section}{\numberline {5}Comparison to Other Methods}{7}{section.5}\protected@file@percent }
+\newlabel{section-comparison-of-methods}{{5}{7}{Comparison to Other Methods}{section.5}{}}
+\citation{lewis2020retrieval}
+\@writefile{lot}{\contentsline {table}{\numberline {2}{\ignorespaces  A comparison of different methods for solving arithmetic tasks. \textbf  {Addition \& Subtraction}. Can the model generalize on addition and subtraction tasks? \textbf  {Multiplication \& Division}. Can the model generalize on multiplication and division tasks? \textbf  {Single-step Solutions}. Does the model run in constant time? \textbf  {On GPU}. Does the model run entirely on the GPU? \textbf  {Explicit Representation}. Can you tell when the model performs an arithmetic operation? \textbf  {Modularity}. Can you tell how the model uses the results of an arithmetic operation? \textbf  {Internal}. Is the arithmetic task solved entirely within latent variables, or does it need to generate output tokens? \textbf  {Pretraining}. Is it possible to train the technique during pretraining, or is it only added afterwards? \textbf  {Dynamic Number Lengths}. Can the model work with inputs of any size? \textbf  {Generically Extensible}. Can the technique be extended to other tasks? }}{8}{table.caption.6}\protected@file@percent }
+\newlabel{tab:comparison_of_traits}{{2}{8}{A comparison of different methods for solving arithmetic tasks. \textbf {Addition \& Subtraction}. Can the model generalize on addition and subtraction tasks? \textbf {Multiplication \& Division}. Can the model generalize on multiplication and division tasks? \textbf {Single-step Solutions}. Does the model run in constant time? \textbf {On GPU}. Does the model run entirely on the GPU? \textbf {Explicit Representation}. Can you tell when the model performs an arithmetic operation? \textbf {Modularity}. Can you tell how the model uses the results of an arithmetic operation? \textbf {Internal}. Is the arithmetic task solved entirely within latent variables, or does it need to generate output tokens? \textbf {Pretraining}. Is it possible to train the technique during pretraining, or is it only added afterwards? \textbf {Dynamic Number Lengths}. Can the model work with inputs of any size? \textbf {Generically Extensible}. Can the technique be extended to other tasks?}{table.caption.6}{}}
+\@writefile{toc}{\contentsline {section}{\numberline {6}Future Work}{8}{section.6}\protected@file@percent }
+\newlabel{section-future-work}{{6}{8}{Future Work}{section.6}{}}
+\citation{hendrycksmath2021}
+\bibdata{main}
+\bibcite{achiam2023gpt}{{1}{2023}{{Achiam et~al.}}{{Achiam, Adler, Agarwal, Ahmad, Akkaya, Aleman, Almeida, Altenschmidt, Altman, Anadkat et~al.}}}
+\bibcite{srivastava2023beyond}{{2}{2023}{{bench authors}}{{}}}
+\bibcite{brown2020language}{{3}{2020}{{Brown}}{{}}}
+\bibcite{chen2022program}{{4}{2022}{{Chen et~al.}}{{Chen, Ma, Wang, and Cohen}}}
+\bibcite{chowdhery2023palm}{{5}{2023}{{Chowdhery et~al.}}{{Chowdhery, Narang, Devlin, Bosma, Mishra, Roberts, Barham, Chung, Sutton, Gehrmann et~al.}}}
+\bibcite{chung2024scaling}{{6}{2024}{{Chung et~al.}}{{Chung, Hou, Longpre, Zoph, Tay, Fedus, Li, Wang, Dehghani, Brahma et~al.}}}
+\bibcite{cobbe2021gsm8k}{{7}{2021}{{Cobbe et~al.}}{{Cobbe, Kosaraju, Bavarian, Chen, Jun, Kaiser, Plappert, Tworek, Hilton, Nakano, Hesse, and Schulman}}}
+\bibcite{ding2022delta}{{8}{2022}{{Ding et~al.}}{{Ding, Qin, Yang, Wei, Yang, Su, Hu, Chen, Chan, Chen et~al.}}}
+\bibcite{dubey2024llama}{{9}{2024}{{Dubey et~al.}}{{Dubey, Jauhri, Pandey, Kadian, Al-Dahle, Letman, Mathur, Schelten, Yang, Fan et~al.}}}
+\bibcite{dziri2024faith}{{10}{2024}{{Dziri et~al.}}{{Dziri, Lu, Sclar, Li, Jiang, Lin, Welleck, West, Bhagavatula, Le~Bras et~al.}}}
+\bibcite{gao2023pal}{{11}{2023}{{Gao et~al.}}{{Gao, Madaan, Zhou, Alon, Liu, Yang, Callan, and Neubig}}}
+\bibcite{tweet2024garrethlee}{{12}{2024}{{Garreth}}{{}}}
+\@writefile{toc}{\contentsline {section}{\numberline {7}Conclusion}{9}{section.7}\protected@file@percent }
+\@writefile{toc}{\contentsline {section}{\numberline {8}Limitations}{9}{section.8}\protected@file@percent }
+\newlabel{section-limitations}{{8}{9}{Limitations}{section.8}{}}
+\@writefile{toc}{\contentsline {section}{\numberline {9}Acknowledgements}{9}{section.9}\protected@file@percent }
+\bibcite{hendrycksmath2021}{{13}{2021}{{Hendrycks et~al.}}{{Hendrycks, Burns, Kadavath, Arora, Basart, Tang, Song, and Steinhardt}}}
+\bibcite{houlsby2019parameter}{{14}{2019}{{Houlsby et~al.}}{{Houlsby, Giurgiu, Jastrzebski, Morrone, De~Laroussilhe, Gesmundo, Attariyan, and Gelly}}}
+\bibcite{imani2023mathpromptermathematicalreasoningusing}{{15}{2023}{{Imani et~al.}}{{Imani, Du, and Shrivastava}}}
+\bibcite{kim2021have}{{16}{2021}{{Kim et~al.}}{{Kim, Hong, Kim, Kang, and Myaeng}}}
+\bibcite{lee2023teachingarithmeticsmalltransformers}{{17}{2023}{{Lee et~al.}}{{Lee, Sreenivasan, Lee, Lee, and Papailiopoulos}}}
+\bibcite{lewis2020retrieval}{{18}{2020}{{Lewis et~al.}}{{Lewis, Perez, Piktus, Petroni, Karpukhin, Goyal, K{\"u}ttler, Lewis, Yih, Rockt{\"a}schel et~al.}}}
+\bibcite{liu2023goatfinetunedllamaoutperforms}{{19}{2023}{{Liu and Low}}{{}}}
+\bibcite{mcleish2024transformers}{{20}{2024}{{McLeish et~al.}}{{McLeish, Bansal, Stein, Jain, Kirchenbauer, Bartoldson, Kailkhura, Bhatele, Geiping, Schwarzschild et~al.}}}
+\bibcite{nye2021show}{{21}{2021}{{Nye et~al.}}{{Nye, Andreassen, Gur-Ari, Michalewski, Austin, Bieber, Dohan, Lewkowycz, Bosma, Luan et~al.}}}
+\bibcite{qu2024tool}{{22}{2024}{{Qu et~al.}}{{Qu, Dai, Wei, Cai, Wang, Yin, Xu, and Wen}}}
+\bibcite{schick2023toolformerlanguagemodelsteach}{{23}{2023}{{Schick et~al.}}{{Schick, Dwivedi-Yu, Dessì, Raileanu, Lomeli, Zettlemoyer, Cancedda, and Scialom}}}
+\bibcite{thawani2021representing}{{24}{2021}{{Thawani et~al.}}{{Thawani, Pujara, Szekely, and Ilievski}}}
+\bibcite{thoppilan2022lamda}{{25}{2022}{{Thoppilan et~al.}}{{Thoppilan, De~Freitas, Hall, Shazeer, Kulshreshtha, Cheng, Jin, Bos, Baker, Du et~al.}}}
+\bibcite{touvron2023llama}{{26}{2023}{{Touvron et~al.}}{{Touvron, Lavril, Izacard, Martinet, Lachaux, Lacroix, Rozi{\`e}re, Goyal, Hambro, Azhar et~al.}}}
+\bibcite{wang2019gluemultitaskbenchmarkanalysis}{{27}{2019}{{Wang et~al.}}{{Wang, Singh, Michael, Hill, Levy, and Bowman}}}
+\bibcite{wei2023chainofthoughtpromptingelicitsreasoning}{{28}{2023}{{Wei et~al.}}{{Wei, Wang, Schuurmans, Bosma, Ichter, Xia, Chi, Le, and Zhou}}}
+\bibcite{yuan2023well}{{29}{2023}{{Yuan et~al.}}{{Yuan, Yuan, Tan, Wang, and Huang}}}
+\@writefile{toc}{\contentsline {section}{\numberline {A}Tokenization}{10}{appendix.A}\protected@file@percent }
+\newlabel{section-tokenization}{{A}{10}{Tokenization}{appendix.A}{}}
+\@writefile{toc}{\contentsline {section}{\numberline {B}Code}{11}{appendix.B}\protected@file@percent }
+\newlabel{appendix-code}{{B}{11}{Code}{appendix.B}{}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {B.1}Code of the Input Mapping and Auxiliary Loss}{11}{subsection.B.1}\protected@file@percent }
+\newlabel{appendix-code-input-and-auxiliary-loss}{{B.1}{11}{Code of the Input Mapping and Auxiliary Loss}{subsection.B.1}{}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {B.2}Code for Emulating a Calculator}{11}{subsection.B.2}\protected@file@percent }
+\newlabel{appendix-code-emulator}{{B.2}{11}{Code for Emulating a Calculator}{subsection.B.2}{}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {B.3}Code of the Output Mapping}{11}{subsection.B.3}\protected@file@percent }
+\newlabel{appendix-code-output}{{B.3}{11}{Code of the Output Mapping}{subsection.B.3}{}}
+\@writefile{lot}{\contentsline {table}{\numberline {3}{\ignorespaces  Examples of numbers, how they get tokenized, and two different variants for representing them internally. Both variants use a fixed size of 10 digits for illustration. The right-aligned variant is the intuitive, default format, and puts the \emph  {least} significant digit at a fixed index. In contrast, the left-aligned format puts the \emph  {most} significant digit at a fixed index. The right-aligned format can be padded with zeros, but the left-aligned format requires a special symbol to mark where the number ends. The underlining in the two formatted numbers indicates which digits get grouped together into the same token. Note that the underlining is the same for all examples in the left-aligned format, but is inconsistent in the default format. This makes the mapping between the tokens and the format much easier to learn for the left-aligned format. The last two lines illustrates that removing digits from the left instead of the right as in the examples above does not lead to the reverse phenomenon: The tokenization is now different, so it doesn't help that the right-aligned representation is similar. }}{12}{table.caption.8}\protected@file@percent }
+\newlabel{tab:tokenization_examples}{{3}{12}{Examples of numbers, how they get tokenized, and two different variants for representing them internally. Both variants use a fixed size of 10 digits for illustration. The right-aligned variant is the intuitive, default format, and puts the \emph {least} significant digit at a fixed index. In contrast, the left-aligned format puts the \emph {most} significant digit at a fixed index. The right-aligned format can be padded with zeros, but the left-aligned format requires a special symbol to mark where the number ends. The underlining in the two formatted numbers indicates which digits get grouped together into the same token. Note that the underlining is the same for all examples in the left-aligned format, but is inconsistent in the default format. This makes the mapping between the tokens and the format much easier to learn for the left-aligned format. The last two lines illustrates that removing digits from the left instead of the right as in the examples above does not lead to the reverse phenomenon: The tokenization is now different, so it doesn't help that the right-aligned representation is similar}{table.caption.8}{}}
+\gdef \@abspage@last{12}

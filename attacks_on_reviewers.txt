@@ -1,0 +1,59 @@
+﻿Assessing the Robustness of LLMs-as-Reviewers to Visible-Text Adversarial Framing
+Motivation & question
+LLMs increasingly assist or write peer reviews. Unlike hidden prompt injection (e.g. white-font instructions), which input sanitization removes, the open question is whether an author can steer an AI reviewer toward acceptance using only visible, legitimate-looking paper text. Such a gap can't be filtered away, because it exploits how the model evaluates content rather than a hidden-instruction channel. We ask when, and through which mechanisms, LLM reviewers fail to stay robust to authorial framing that nudges the evaluation upward.
+Approach
+A paper is reviewed under the ICLR standard to obtain a baseline; a single adversarial edit (or a chosen combination) is applied; the modified paper is re-reviewed by the same model under identical settings. The delta between the two reviews isolates that edit's effect and attributes it to a specific rhetorical mechanism.
+Edit structure
+Edits are grouped by the review quality axis each targets. For each edit: what it does, and the model vulnerability it exploits.
+Argumentative validity — strengthen claims without adding real support
+* Frame / rubric capture. Asserts in the intro/results that reviewing should prioritize the axis on which the paper is strong and weight the weak axis less. Why it should work: LLMs adopt whatever evaluative frame is presented; pre-loading the criteria before any evidence appears shapes what gets weighted, and every sentence is defensible as ordinary positioning, so it isn't flagged.
+   * Class-of-paper capture: we can also add, inside the paper, a statement indicating that the paper is to be considered as a preliminary conceptual contribution, methodological framework, explorative study, short paper etc. as different paper types require different review criteria (Shaw et al., “Writing Good Software Engineering Research Papers”)
+* Objection pre-emption (disarming framing). A limitations section names an obvious weakness and minimizes it ("our sample is modest, but this is standard and does not affect validity"). Why: once the model has "seen" a concern acknowledged and defused, it is less likely to independently regenerate it — the attack suppresses critique rather than answering it.
+* Expert / theory / authority endorsement. Backs a contested claim with a cited expert finding, an established theory, or an institutional source. Why: sycophancy — the model tends to defer to confident, authoritative sourcing instead of verifying, so borrowed warrant reads as pre-validated.
+   * Prestige citation padding
+Soundness / fairness — make the evidence appear to entail the claims
+* Result distortion. Reframes negative results downward and positive ones upward (a 3-point accuracy loss becomes "recovers 97%"; the efficiency win is stated first). Why: judge models are sensitive to framing, ordering, and sentiment, and evaluate within the paper's described world rather than recomputing it.
+* Evidence omission. Drops or aggregates the specific numbers/tables a reviewer would attack (reporting only an average that hides a collapsed task). Why: the model can only critique what is present; absent worst-case evidence cannot be raised against the paper.
+* Coverage justification. Supplies a plausible excuse for missing baselines, ablations, or larger-scale runs ("reference implementation unavailable; we expect our advantage to hold"). Why: linked to pre-emption — a reasonable-sounding justification makes the model treat a gap as excused rather than disqualifying.
+Novelty
+* Related-work mispositioning. Takes a genuinely overlapping prior work and falsely narrows or dismisses its contribution to clear novelty space. Why: this pits the model's own knowledge against author-supplied claims — if it defers to the paper's (false) account of prior work over what it knows, perceived novelty rises. It is also a clean test of that trust boundary.
+* Surprise framing: adding “surprisingly”, or similar, to previously non-surprising statements / results
+Impact — inflate significance
+* Storytelling. Opens the intro on a concrete real-world usage scenario. Why: concreteness makes the contribution feel deployed rather than hypothetical, raising perceived significance.
+* Positive emotional appeal. Conveys — or overstates — what newly becomes possible ("makes on-device personalization feasible for the first time"). Why: tone-sensitive scoring; enthusiasm about possibilities inflates the impact judgment.
+* Negative emotional appeal. Conveys — or overstates — the stakes of ignoring the problem, through concrete consequences rather than hyperbole. Why: framing the problem as high-stakes raises its perceived importance and worthiness of acceptance.
+* Resource over-weighting. Overstates the future uptake of a released artifact ("we anticipate this will become a standard reference"). Why: models reward projected significance claims about resources, crediting future usage that hasn't happened.
+* Scope overweighting: overstate the generalizability of the proposed approach
+* Contribution atomization: split one single contribution into multiple contributions, making it seem like the paper does more.
+* Key-idea crystallization: all the paper gets presented as a consequence of a unique, smart and strong idea / observation.
+Style — surface cues correlated with quality
+* Self-enhancement bias. Has the reviewer model itself rewrite the paper, then checks whether it scores its own phrasing higher. Why: judge models show documented self-preference and stylistic-familiarity bias toward text in their own register.
+* Surface rigor. Wraps trivial points in formal machinery — definitions, propositions, equations, notation. Why: LLMs correlate markers of rigor with quality more readily than humans, independent of substance.
+* Boosting language. Uses definitive markers ("certainly," "unmistakably," "establishes"), plus social proof (how widely a view is held), injunctive norms (what the community agrees should be done), and appeals to shared values (e.g. green AI). Why: confident, settled-sounding assertion substitutes for strength of evidence, and conformity/values cues exploit the model's tendency to defer to consensus.
+* Verbosity. Pads related work and enumerates "key contributions." Why: elaboration/verbosity bias — judges rate longer, more thorough-seeming text higher, and a ready-made contribution list gives the model positive points to adopt uncritically.
+Inclusion criterion
+Only papers the model initially rates below the acceptance threshold (neither accept nor weak-accept) enter the analysis, so the study measures genuine upward movement toward acceptance without ceiling effects.
+
+
+Mapping to LLM weaknesses
+
+
+1. Length / verbosity bias
+   1. Verbosity (to be added into the Appendix)
+2. Sycophancy bias
+   1. Rubric Capture
+   2. Disarming Framing
+   3. Boosting Language
+   4. Resource Overweighting
+   5. Positive Emotional Appeal
+3. Authority bias
+   1. Expert endorsement (unsafe)
+   2. Theory endorsement (unsafe)
+   3. Authority endorsement (unsafe)
+4. Novelty / impact bias
+   1. Related-Work Mispositioning
+   2. Surprise Framing
+5. Positional bias (?)
+6. Pseudo-sophistication bias
+   1. Surface Rigor
+7. Self-preference bias

@@ -1,0 +1,17 @@
+# Models available to run_review.py. `model_class` must be a key of
+# MODEL_CLASSES in reviewer.py ("anthropic", "openai", or "vllm").
+- model_id: claude-opus-4-8
+  model_name: claude-opus-4-8
+  model_class: anthropic
+
+- model_id: gpt-4o-mini
+  model_name: gpt-4o-mini
+  model_class: openai
+
+- model_id: gpt-5-mini
+  model_name: gpt-5-mini
+  model_class: openai
+
+- model_id: llama-3-70b
+  model_name: meta-llama/Meta-Llama-3-70B-Instruct
+  model_class: vllm

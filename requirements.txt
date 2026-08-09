@@ -1,0 +1,9 @@
+anthropic
+openai
+latexmk
+pyyaml
+pypdf
+dotenv
+arize-phoenix-otel
+openinference-instrumentation-openai
+openinference-instrumentation-anthropic

@@ -1,0 +1,300 @@
+# ACL 2025 review form: ACL uses ACL Rolling Review (ARR) for all of its
+# submissions, so this is the ARR review form as used from the Feb 2025
+# cycle onward (the cycle feeding ACL 2025).
+# Source: https://aclrollingreview.org/reviewform
+conference: ACL
+edition: 2025
+notes: >
+  Mirrors the official ACL Rolling Review (ARR) form. Each field below is
+  meant to be turned into a prompt for an LLM reviewer: `question` is the
+  instruction shown to the reviewer, `type` says what shape the answer must
+  take, and `scale`/`options` (when present) enumerate the only legal
+  values. Half-point scores (x.5) are accepted on every `score` field with a
+  0.5 step and count as an intermediate value between the two neighboring
+  labeled levels, except where a half-point already has its own label
+  (overall_assessment). Fields marked `applies_to: human_reviewer_only` are
+  part of the official form but describe the human reviewer's own vantage
+  point rather than the paper, so they should be skipped by an LLM reviewer.
+
+fields:
+  - id: paper_summary
+    question: >
+      Describe what this paper is about. This should help area chairs and
+      action editors understand the topic of the work and identify any
+      possible misunderstandings.
+    type: text
+    required: true
+
+  - id: summary_of_strengths
+    question: >
+      What are the major reasons to publish this paper at a selective *ACL
+      venue? These could include novel and useful methodology, insightful
+      empirical results or theoretical analysis, well-written survey or
+      position paper, or similar.
+    type: text
+    required: true
+
+  - id: summary_of_weaknesses
+    question: >
+      What are the concerns that you have about the paper that would cause
+      you to favor prioritizing other high-quality papers for publication at
+      a selective *ACL venue? These could include concerns about
+      correctness, methodological soundness, limited impact, and/or clarity
+      of presentation. Please number each weakness so authors may respond
+      individually.
+    type: text
+    required: true
+
+  - id: comments_suggestions_typos
+    question: >
+      Additional comments, suggestions for improvement, or minor issues
+      (e.g. typos) that do not need to be addressed in the author response.
+    type: text
+    required: false
+
+  - id: soundness
+    question: >
+      Please assign the paper a soundness score: is the paper sufficiently
+      sound and thorough? Does it clearly state scientific claims and
+      provide adequate support for them? For experimental papers, consider
+      the depth and/or breadth of the research questions investigated, the
+      technical soundness of the experiments, and the methodological
+      validity of the evaluation.
+    type: score
+    required: true
+    step: 0.5
+    scale:
+      - value: 5
+        label: excellent
+        description: "This study is one of the most thorough I have seen, given its type."
+      - value: 4
+        label: strong
+        description: "This study provides sufficient support for all of its claims."
+      - value: 3
+        label: acceptable
+        description: "This study provides sufficient support for its main claims."
+      - value: 2
+        label: poor
+        description: "Some of the main claims are not sufficiently supported."
+      - value: 1
+        label: "major issues"
+        description: "This study is not yet sufficiently thorough to warrant publication or is not relevant to the venue."
+
+  - id: excitement
+    question: >
+      Sometimes you may find a paper sound but not personally exciting.
+      Rate how exciting or impactful this paper is, independent of your
+      soundness score. Excitement is subjective and does not necessarily
+      follow what is currently popular in the field; papers may be exciting
+      because they present conceptual breakthroughs, challenge common
+      assumptions, or have a possible impact on some community, even if
+      that community is not your own.
+    type: score
+    required: true
+    step: 0.5
+    scale:
+      - value: 5
+        label: "highly exciting"
+        description: "I would recommend this paper to others and/or attend its presentation."
+      - value: 4
+        label: exciting
+        description: "I would mention this paper to others and/or make an effort to attend its presentation."
+      - value: 3
+        label: interesting
+        description: "I might mention some points of this paper to others or attend its presentation if there's time."
+      - value: 2
+        label: "potentially interesting"
+        description: "This paper does not resonate with me, but it might with others in the *ACL community."
+      - value: 1
+        label: "not exciting"
+        description: "This paper does not resonate with me, and I don't think it would with others in the *ACL community."
+
+  - id: overall_assessment
+    question: >
+      Give an explicit overall recommendation for the outcome of this paper
+      if it were committed to an *ACL venue. This is a composite score that
+      should reflect your assessment of soundness and excitement, as well as
+      other factors such as novelty and impact.
+    type: score
+    required: true
+    step: 0.5
+    scale:
+      - value: 5
+        label: "consider for award"
+        description: "I think this paper could be considered for an outstanding paper award."
+      - value: 4.5
+        label: "borderline award"
+      - value: 4
+        label: conference
+        description: "I think this paper could be accepted to an *ACL conference."
+      - value: 3.5
+        label: "borderline conference"
+      - value: 3
+        label: findings
+        description: "I think this paper could be accepted to the Findings of the ACL."
+      - value: 2.5
+        label: "borderline findings"
+      - value: 2
+        label: "resubmit next cycle"
+        description: "I think this paper needs substantial revisions that can likely be completed by the next ARR cycle."
+      - value: 1.5
+        label: "resubmit after next cycle"
+        description: "I think this paper needs substantial revisions that cannot be completed by the next ARR cycle."
+      - value: 1
+        label: "do not resubmit"
+        description: "This paper has to be fully redone, or it is not appropriate for an *ACL venue."
+
+  - id: best_paper
+    question: >
+      Could this paper be considered for a best paper award? (Required if
+      overall_assessment is "consider for award" or "borderline award".)
+    type: single_select
+    required: false
+    depends_on: overall_assessment
+    options: ["yes", "no"]
+
+  - id: best_paper_justification
+    question: "If you answered yes above, justify why this paper is award-worthy."
+    type: text
+    required: false
+    depends_on: best_paper
+
+  - id: confidence
+    question: "How confident are you in your overall assessment of this paper?"
+    type: score
+    required: true
+    scale:
+      - value: 5
+        label: "positive that my evaluation is correct"
+        description: "I read the paper very carefully and am familiar with related work."
+      - value: 4
+        label: "quite sure"
+        description: "I tried to check the important points carefully; it's unlikely, though possible, that I missed something."
+      - value: 3
+        label: "pretty sure"
+        description: "I understand this area but did not carefully check every detail, e.g. novelty, math, or experimental design."
+      - value: 2
+        label: "willing to defend, but likely missed something"
+        description: "I am not sure I understood central parts of the paper, or I am unfamiliar with some pieces of related work."
+      - value: 1
+        label: "not my area, or paper is very hard to understand"
+        description: "My evaluation is an educated guess."
+
+  - id: limitations_and_societal_impact
+    question: >
+      Did the authors adequately discuss the limitations and potential
+      societal impact of their work? If not, briefly explain what is
+      missing, e.g. exclusion of user groups, unintended bias, language
+      representation gaps, or dual-use concerns.
+    type: text
+    required: true
+
+  - id: ethical_concerns
+    question: >
+      Does this submission raise concerns with respect to the ACL Code of
+      Ethics, or does it fail to adequately address points raised in the
+      author-submitted ethics checklist? If so, explain briefly.
+    type: text
+    required: false
+
+  - id: needs_ethics_review
+    question: >
+      Does this paper raise challenging ethical questions that warrant a
+      special, in-depth review by the ethics committee?
+    type: single_select
+    required: true
+    options: ["yes", "no"]
+
+  - id: reproducibility
+    question: >
+      How likely is it that other researchers, without access to the
+      authors' code and data, could reproduce the results reported in this
+      paper?
+    type: score
+    required: false
+    scale:
+      - value: 5
+        label: "they could easily reproduce the results"
+      - value: 4
+        label: "they could mostly reproduce the results, but there may be some variation because of sample variance or minor variations in their interpretation of the protocol or method"
+      - value: 3
+        label: "they could reproduce the results with some difficulty; the settings of parameters are underspecified or their data are not widely available"
+      - value: 2
+        label: "they would be hard pressed to reproduce the results; extensive experimentation would be needed to reproduce the results"
+      - value: 1
+        label: "they would not be able to reproduce the results here no matter how hard they tried"
+
+  - id: datasets
+    question: >
+      If the submission releases new datasets, rate how useful these
+      datasets are likely to be to the broader research community, beyond
+      demonstrating the paper's own claims. Leave blank if no dataset was
+      released.
+    type: score
+    required: false
+    scale:
+      - value: 5
+        label: enabling
+        description: "The newly released datasets should affect other people's choice of research and evaluation topics."
+      - value: 4
+        label: useful
+        description: "I would recommend the new datasets to other researchers for their own work."
+      - value: 3
+        label: "potentially useful"
+        description: "Someone might find the new datasets useful for their work."
+      - value: 2
+        label: documentary
+        description: "The new datasets will be useful to study or replicate the reported research, but are unlikely to be used beyond this paper."
+      - value: 1
+        label: "no usable datasets submitted"
+
+  - id: software
+    question: >
+      If the submission releases new software or tools, rate how useful
+      this software is likely to be to the broader research community,
+      beyond demonstrating the paper's own claims. Leave blank if no
+      software was released.
+    type: score
+    required: false
+    scale:
+      - value: 5
+        label: enabling
+        description: "The newly released software should affect other people's choice of research and evaluation topics."
+      - value: 4
+        label: useful
+        description: "I would recommend the new software to other researchers for their own work."
+      - value: 3
+        label: "potentially useful"
+        description: "Someone might find the new software useful for their work."
+      - value: 2
+        label: documentary
+        description: "The new software will be useful to study or replicate the reported research, but is unlikely to be used beyond this paper."
+      - value: 1
+        label: "no usable software released"
+
+  - id: author_identity_knowledge
+    question: >
+      Do you know or have a good guess of the authors' identity? (Internal,
+      not shown to authors.)
+    type: score
+    required: false
+    applies_to: human_reviewer_only
+    scale:
+      - value: 5
+        label: "I am confident I know the authors' identity because of a double-blind violation (excluding permitted preprints)."
+      - value: 4
+        label: "I am confident I know, or have a good guess of, the authors' identity based on a preprint or a talk/poster at a workshop."
+      - value: 3
+        label: "I am confident I know, or have a good guess of, the authors' identity based on the contents of the submission itself."
+      - value: 2
+        label: "I have a good guess of the authors' identity based on social media, a talk, or informal communication."
+      - value: 1
+        label: "I do not have even an educated guess about the authors' identity."
+
+  - id: optional_conjecture
+    question: >
+      (Optional, anonymous) Any speculation about the authors' identity that
+      might be relevant for the area chair. Not shown to authors.
+    type: text
+    required: false
+    applies_to: human_reviewer_only

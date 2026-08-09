@@ -1,0 +1,20 @@
+[project]
+name = "robustrev"
+version = "0.1.0"
+requires-python = ">=3.9"
+dependencies = [
+    "anthropic",
+    "openai",
+    "pyyaml",
+    "pypdf",
+]
+
+[project.scripts]
+robustrev = "robustrev:main"
+
+[build-system]
+requires = ["setuptools>=61"]
+build-backend = "setuptools.build_meta"
+
+[tool.setuptools]
+py-modules = ["robustrev", "reviewer", "perturber", "models", "latex_compile"]

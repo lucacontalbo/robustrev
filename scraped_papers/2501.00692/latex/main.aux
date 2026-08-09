@@ -1,0 +1,209 @@
+\relax 
+\providecommand\hyper@newdestlabel[2]{}
+\providecommand\HyField@AuxAddToFields[1]{}
+\providecommand\HyField@AuxAddToCoFields[2]{}
+\citation{openai2024gpt4technicalreport2,dubey2024llama3herdmodels2,cai2024internlm2technicalreport2,pióro2024moemambaefficientselectivestate}
+\citation{vaswani2023attentionneed}
+\citation{li2024longcontextllmsstrugglelong}
+\citation{ding2024longropeextendingllmcontext,ding2024longrope}
+\citation{dao2022flashattentionfastmemoryefficientexact,dao2023flashattention2fasterattentionbetter,shah2024flashattention3fastaccurateattention}
+\citation{gu2024mambalineartimesequencemodeling,dao2024transformersssmsgeneralizedmodels,peng2023rwkvreinventingrnnstransformer,beltagy2020longformerlongdocumenttransformer}
+\citation{Verbraeken_2020,zhao2023pytorchfsdpexperiencesscaling,rajbhandari2020zeromemoryoptimizationstraining,micikevicius2018mixedprecisiontraining,herrmann2019optimalcheckpointingheterogeneouschains}
+\citation{damadi2023backpropagationalgorithmmathstudent}
+\citation{sohoni2022lowmemoryneuralnetworktraining}
+\citation{sohoni2022lowmemoryneuralnetworktraining,rajbhandari2020zero}
+\@writefile{toc}{\contentsline {section}{\numberline {1}Introduction}{1}{section.1}\protected@file@percent }
+\citation{CAO2002171,adjointjohnson2007}
+\citation{chen2019neuralordinarydifferentialequations,xu2022characteristicneuralordinarydifferential}
+\citation{balestriero2021fastjacobianvectorproductdeep}
+\@writefile{lof}{\contentsline {figure}{\numberline {1}{\ignorespaces Compared to backpropagation (red lines), adjoint sharding (blue lines) significantly reduces memory requirements at training. Showing memory cost to train $32\mathrm  {M}$, $63\mathrm  {M}$, $127\mathrm  {M}$, $225\mathrm  {M}$, and $1.27\mathrm  {B}$ parameter State Space Model (SSM) with batch size~$2$ and Adam optimizer on one GPU.}}{2}{figure.caption.1}\protected@file@percent }
+\providecommand*\caption@xref[2]{\@setref\relax\@undefined{#1}}
+\newlabel{fig:memoryReduction}{{1}{2}{Compared to backpropagation (red lines), adjoint sharding (blue lines) significantly reduces memory requirements at training. Showing memory cost to train $32\mathrm {M}$, $63\mathrm {M}$, $127\mathrm {M}$, $225\mathrm {M}$, and $1.27\mathrm {B}$ parameter State Space Model (SSM) with batch size~$2$ and Adam optimizer on one GPU}{figure.caption.1}{}}
+\@writefile{lof}{\contentsline {figure}{\numberline {2}{\ignorespaces Adjoint sharding dissembles large models' gradient computations along the sequence dimension $t$ and the layer dimension $k$. When evaluating the gradient at time $t$, we perform $t$ vector-Jacobian products along the adjoint dimension $i$ for every layer indices $k$.}}{2}{figure.caption.2}\protected@file@percent }
+\newlabel{fig:main}{{2}{2}{Adjoint sharding dissembles large models' gradient computations along the sequence dimension $t$ and the layer dimension $k$. When evaluating the gradient at time $t$, we perform $t$ vector-Jacobian products along the adjoint dimension $i$ for every layer indices $k$}{figure.caption.2}{}}
+\@writefile{toc}{\contentsline {paragraph}{Adjoint method}{2}{section*.3}\protected@file@percent }
+\@writefile{toc}{\contentsline {paragraph}{Vector-Jacobian product}{2}{section*.4}\protected@file@percent }
+\citation{he2015deepresiduallearningimage}
+\citation{vaswani2023attentionneed,gu2024mamba1}
+\citation{de2024griffinmixinggatedlinear,beck2024xlstmextendedlongshortterm,peng2023rwkvreinventingrnnstransformer}
+\citation{bptt}
+\citation{pascanu2013difficultytrainingrecurrentneural}
+\citation{fu2023hungryhungryhipposlanguage,gu2021combiningrecurrentconvolutionalcontinuoustime,gu2022trainhippostatespace,gupta2023simplifyingunderstandingstatespace,orvieto2023resurrectingrecurrentneuralnetworks,NEURIPS2020_c3581d21}
+\citation{wang2023statespacemodelslayerwisenonlinearity}
+\citation{Jaeger2005ATO,tallec2017unbiasingtruncatedbackpropagationtime}
+\citation{chen2019neuralordinarydifferentialequations,dupont2019augmentedneuralodes}
+\citation{rajbhandari2020zeromemoryoptimizationstraining}
+\citation{zhao2023pytorchfsdpexperiencesscaling}
+\citation{sohoni2022lowmemoryneuralnetworktraining}
+\citation{ren2021zerooffloaddemocratizingbillionscalemodel}
+\citation{liu2023ringattentionblockwisetransformers,liu2024worldmodelmillionlengthvideo}
+\citation{chen2023extendingcontextwindowlarge}
+\citation{ntkReddit2023}
+\citation{xiao2024efficientstreaminglanguagemodels}
+\citation{longchat2023}
+\citation{chen2024longloraefficientfinetuninglongcontext}
+\citation{peng2023yarnefficientcontextwindow}
+\citation{chen2024longloraefficientfinetuninglongcontext}
+\citation{zhang2024soaring4k400kextending}
+\citation{chen2023extendingcontextwindowlarge,ntkReddit2023,xiao2024efficientstreaminglanguagemodels,longchat2023,chen2024longloraefficientfinetuninglongcontext,peng2023yarnefficientcontextwindow,zhang2024soaring4k400kextending,tworkowski2023focusedtransformercontrastivetraining}
+\citation{chen2023extendingcontextwindowlarge,ntkReddit2023,xiao2024efficientstreaminglanguagemodels,longchat2023,chen2024longloraefficientfinetuninglongcontext,peng2023yarnefficientcontextwindow,zhang2024soaring4k400kextending,tworkowski2023focusedtransformercontrastivetraining}
+\@writefile{toc}{\contentsline {paragraph}{Truncated adjoint sharding}{3}{section*.5}\protected@file@percent }
+\@writefile{toc}{\contentsline {paragraph}{Distributed and parallel computation}{3}{section*.6}\protected@file@percent }
+\@writefile{toc}{\contentsline {paragraph}{State-space models and residual networks}{3}{section*.7}\protected@file@percent }
+\@writefile{toc}{\contentsline {section}{\numberline {2}Related works}{3}{section.2}\protected@file@percent }
+\@writefile{toc}{\contentsline {paragraph}{Linear LLMs}{3}{section*.8}\protected@file@percent }
+\@writefile{toc}{\contentsline {paragraph}{Backpropagation through time}{3}{section*.9}\protected@file@percent }
+\@writefile{toc}{\contentsline {paragraph}{Neural ordinary differential equations}{3}{section*.10}\protected@file@percent }
+\@writefile{toc}{\contentsline {paragraph}{Low memory training methods}{3}{section*.11}\protected@file@percent }
+\@writefile{toc}{\contentsline {paragraph}{Context length extension methods}{3}{section*.12}\protected@file@percent }
+\citation{dao2024mamba2}
+\citation{pióro2024moemambaefficientselectivestate,anthony2024blackmambamixtureexpertsstatespace}
+\citation{waleffe2024empiricalstudymambabasedlanguage}
+\citation{waleffe2024empiricalstudymambabasedlanguage}
+\citation{lieber2024jambahybridtransformermambalanguage}
+\@writefile{lof}{\contentsline {figure}{\numberline {3}{\ignorespaces Lines in red are fine-tuning free methods and lines in blue are fine-tuning methods. Fine-tuning methods achieve better performances than fine-tuning free method but often suffer from out of memory issues \citep  {chen2023extendingcontextwindowlarge, ntkReddit2023, xiao2024efficientstreaminglanguagemodels, longchat2023, chen2024longloraefficientfinetuninglongcontext, peng2023yarnefficientcontextwindow, zhang2024soaring4k400kextending, tworkowski2023focusedtransformercontrastivetraining}. Lower values are better across all three tasks.}}{4}{figure.caption.13}\protected@file@percent }
+\newlabel{fig:pg19}{{3}{4}{Lines in red are fine-tuning free methods and lines in blue are fine-tuning methods. Fine-tuning methods achieve better performances than fine-tuning free method but often suffer from out of memory issues \citep {chen2023extendingcontextwindowlarge, ntkReddit2023, xiao2024efficientstreaminglanguagemodels, longchat2023, chen2024longloraefficientfinetuninglongcontext, peng2023yarnefficientcontextwindow, zhang2024soaring4k400kextending, tworkowski2023focusedtransformercontrastivetraining}. Lower values are better across all three tasks}{figure.caption.13}{}}
+\@writefile{toc}{\contentsline {section}{\numberline {3}Background}{4}{section.3}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsection}{\numberline {3.1}State-space models}{4}{subsection.3.1}\protected@file@percent }
+\newlabel{sec:ssm}{{3.1}{4}{State-space models}{subsection.3.1}{}}
+\citation{He_2016_CVPR,guo2022attention,kirillov2023segment,peebles2023scalable}
+\citation{CAO2002171}
+\citation{CAO2002171}
+\citation{adjointjohnson2007}
+\citation{baydin2018ad}
+\@writefile{toc}{\contentsline {subsection}{\numberline {3.2}Residual Networks}{5}{subsection.3.2}\protected@file@percent }
+\newlabel{sec:resnet}{{3.2}{5}{Residual Networks}{subsection.3.2}{}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {3.3}Adjoint method}{5}{subsection.3.3}\protected@file@percent }
+\newlabel{sec:adjoint}{{3.3}{5}{Adjoint method}{subsection.3.3}{}}
+\newlabel{eqn:adj}{{2}{5}{Adjoint method}{equation.2}{}}
+\newlabel{prop:adjoint}{{1}{5}{Adjoint method}{proposition.1}{}}
+\citation{baydin2018automaticdifferentiationmachinelearning,paszke2019pytorchimperativestylehighperformance}
+\citation{baydin2018automaticdifferentiationmachinelearning}
+\citation{herrmann2019optimalcheckpointingheterogeneouschains}
+\@writefile{toc}{\contentsline {section}{\numberline {4}Adjoint sharding}{6}{section.4}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsection}{\numberline {4.1}Adjoint sharding for one SSM}{6}{subsection.4.1}\protected@file@percent }
+\newlabel{sec:onessm}{{4.1}{6}{Adjoint sharding for one SSM}{subsection.4.1}{}}
+\newlabel{prop:onessm}{{2}{6}{Adjoint sharding for one SSM}{proposition.2}{}}
+\@writefile{lof}{\contentsline {figure}{\numberline {4}{\ignorespaces The adjoint states are computed sequentially backwards.}}{6}{figure.caption.14}\protected@file@percent }
+\newlabel{fig:adjoint}{{4}{6}{The adjoint states are computed sequentially backwards}{figure.caption.14}{}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {4.2}Adjoint sharding for multiple SSMs}{6}{subsection.4.2}\protected@file@percent }
+\citation{vaswani2023attentionneed}
+\citation{yang2021focal}
+\citation{tallec2017unbiasingtruncatedbackpropagationtime}
+\newlabel{prop:multssm}{{3}{7}{Adjoint sharding for multiple SSMs}{proposition.3}{}}
+\@writefile{lof}{\contentsline {figure}{\numberline {5}{\ignorespaces Computation schematic of $\mathrm  {d}l^t/\mathrm  {d}\boldsymbol  {\theta }_{\boldsymbol  {\mathcal  {A}}_k}$, $\mathrm  {d}l^t/\mathrm  {d}\boldsymbol  {\theta }_{\boldsymbol  {\mathcal  {B}}_k}$, and $\mathrm  {d}l^t/\mathrm  {d}\boldsymbol  {\theta }_{\boldsymbol  {\mathcal  {C}}_k}$.}}{7}{figure.caption.15}\protected@file@percent }
+\newlabel{fig:vjpABC}{{5}{7}{Computation schematic of $\diff l^t/\diff \boldsymbol {\theta }_{\boldsymbol {\A }_k}$, $\diff l^t/\diff \boldsymbol {\theta }_{\boldsymbol {\B }_k}$, and $\diff l^t/\diff \boldsymbol {\theta }_{\boldsymbol {\C }_k}$}{figure.caption.15}{}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {4.3}Truncated adjoint sharding}{7}{subsection.4.3}\protected@file@percent }
+\newlabel{eqn:capped}{{7}{7}{Truncated adjoint sharding}{equation.7}{}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {4.4}Distributed training}{8}{subsection.4.4}\protected@file@percent }
+\@writefile{loa}{\contentsline {algorithm}{\numberline {1}{\ignorespaces Forward step in evaluation mode on a distributed system}}{8}{algorithm.1}\protected@file@percent }
+\newlabel{alg:forward}{{1}{8}{Forward step in evaluation mode on a distributed system}{algorithm.1}{}}
+\@writefile{loa}{\contentsline {algorithm}{\numberline {2}{\ignorespaces Evaluating adjoint states for token index $t$ and ResNet index $k$ with truncated adjoint sharding $\bar  {T}$}}{8}{algorithm.2}\protected@file@percent }
+\newlabel{alg:capped_adjoint}{{2}{8}{Evaluating adjoint states for token index $t$ and ResNet index $k$ with truncated adjoint sharding $\Bar {T}$}{algorithm.2}{}}
+\citation{novak2022fastfinitewidthneural}
+\citation{nvidiamvp}
+\@writefile{loa}{\contentsline {algorithm}{\numberline {3}{\ignorespaces Evaluating the $\mathrm  {vjp}$'s for token index $t$ and ResNet index $k$ with truncated adjoint sharding $\bar  {T}$}}{9}{algorithm.3}\protected@file@percent }
+\newlabel{alg:capped_vjp}{{3}{9}{Evaluating the $\vjp $'s for token index $t$ and ResNet index $k$ with truncated adjoint sharding $\Bar {T}$}{algorithm.3}{}}
+\@writefile{loa}{\contentsline {algorithm}{\numberline {4}{\ignorespaces Evaluating $\frac  {\mathrm  {d}L}{\mathrm  {d}\boldsymbol  {\theta }}$ with truncated adjoint sharding $\bar  {T}$ on $\Upsilon $ devices}}{9}{algorithm.4}\protected@file@percent }
+\newlabel{alg:dist_capped_grad}{{4}{9}{Evaluating $\frac {\diff L}{\diff \boldsymbol {\theta }}$ with truncated adjoint sharding $\Bar {T}$ on $\Upsilon $ devices}{algorithm.4}{}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {4.5}Parallel computing}{9}{subsection.4.5}\protected@file@percent }
+\newlabel{sec:parallel}{{4.5}{9}{Parallel computing}{subsection.4.5}{}}
+\@writefile{lot}{\contentsline {table}{\numberline {1}{\ignorespaces Memory and FLOPs required to compute the $\mathrm  {vjp}$s. $|\boldsymbol  {\theta }_{\boldsymbol  {\mathcal  {A}}}|^*$, $|\boldsymbol  {\theta }_{\boldsymbol  {\mathcal  {B}}}|^*$, and $|\boldsymbol  {\theta }_{\boldsymbol  {\mathcal  {C}}}|^*$ represents the number of elements of the biggest parameter vector of $\boldsymbol  {\mathcal  {A}}$, $\boldsymbol  {\mathcal  {B}}$, and $\boldsymbol  {\mathcal  {C}}$.}}{10}{table.caption.16}\protected@file@percent }
+\newlabel{tab:vjpMemFlop}{{1}{10}{Memory and FLOPs required to compute the $\vjp $s. $|\boldsymbol {\theta }_{\boldsymbol {\A }}|^*$, $|\boldsymbol {\theta }_{\boldsymbol {\B }}|^*$, and $|\boldsymbol {\theta }_{\boldsymbol {\C }}|^*$ represents the number of elements of the biggest parameter vector of $\boldsymbol {\A }$, $\boldsymbol {\B }$, and $\boldsymbol {\C }$}{table.caption.16}{}}
+\@writefile{lof}{\contentsline {figure}{\numberline {6}{\ignorespaces Training time (/day) per epoch comparison for adjoint sharding, truncated adjoint sharding, and backpropagation with different context lengths. Assumed a 100-layer $\mathrm  {SSM}$-ResNet model, a 280x acceleration for adjoint sharding from parallel computing (achievable with five Amazon P4 instances), and $\bar  {T}$ from $15$ to $2500$.}}{10}{figure.caption.17}\protected@file@percent }
+\newlabel{fig:tCapped}{{6}{10}{Training time (/day) per epoch comparison for adjoint sharding, truncated adjoint sharding, and backpropagation with different context lengths. Assumed a 100-layer $\ssm $-ResNet model, a 280x acceleration for adjoint sharding from parallel computing (achievable with five Amazon P4 instances), and $\Bar {T}$ from $15$ to $2500$}{figure.caption.17}{}}
+\@writefile{toc}{\contentsline {paragraph}{Limitation}{10}{section*.18}\protected@file@percent }
+\@writefile{toc}{\contentsline {paragraph}{Conclusion}{10}{section*.19}\protected@file@percent }
+\bibdata{references}
+\bibcite{anthony2024blackmambamixtureexpertsstatespace}{{1}{2024}{{Anthony et~al.}}{{Anthony, Tokpanov, Glorioso, and Millidge}}}
+\bibcite{balestriero2021fastjacobianvectorproductdeep}{{2}{2021}{{Balestriero and Baraniuk}}{{}}}
+\bibcite{baydin2018ad}{{3}{2018{}}{{Baydin et~al.}}{{Baydin, Pearlmutter, Radul, and Siskind}}}
+\bibcite{baydin2018automaticdifferentiationmachinelearning}{{4}{2018{}}{{Baydin et~al.}}{{Baydin, Pearlmutter, Radul, and Siskind}}}
+\bibcite{beck2024xlstmextendedlongshortterm}{{5}{2024}{{Beck et~al.}}{{Beck, Pöppel, Spanring, Auer, Prudnikova, Kopp, Klambauer, Brandstetter, and Hochreiter}}}
+\bibcite{beltagy2020longformerlongdocumenttransformer}{{6}{2020}{{Beltagy et~al.}}{{Beltagy, Peters, and Cohan}}}
+\bibcite{cai2024internlm2technicalreport2}{{7}{2024}{{Cai et~al.}}{{Cai, Cao, Chen, Chen, Chen, Chen, et~al.}}}
+\bibcite{CAO2002171}{{8}{2002}{{Cao et~al.}}{{Cao, Li, and Petzold}}}
+\bibcite{chen2019neuralordinarydifferentialequations}{{9}{2019}{{Chen et~al.}}{{Chen, Rubanova, Bettencourt, and Duvenaud}}}
+\bibcite{chen2023extendingcontextwindowlarge}{{10}{2023}{{Chen et~al.}}{{Chen, Wong, Chen, and Tian}}}
+\bibcite{chen2024longloraefficientfinetuninglongcontext}{{11}{2024}{{Chen et~al.}}{{Chen, Qian, Tang, Lai, Liu, Han, and Jia}}}
+\bibcite{damadi2023backpropagationalgorithmmathstudent}{{12}{2023}{{Damadi et~al.}}{{Damadi, Moharrer, and Cham}}}
+\bibcite{dao2023flashattention2fasterattentionbetter}{{13}{2023}{{Dao}}{{}}}
+\bibcite{dao2024mamba2}{{14}{2024{}}{{Dao and Gu}}{{}}}
+\bibcite{dao2024transformersssmsgeneralizedmodels}{{15}{2024{}}{{Dao and Gu}}{{}}}
+\bibcite{dao2022flashattentionfastmemoryefficientexact}{{16}{2022}{{Dao et~al.}}{{Dao, Fu, Ermon, Rudra, and Ré}}}
+\bibcite{de2024griffinmixinggatedlinear}{{17}{2024}{{De et~al.}}{{De, Smith, Fernando, Botev, Cristian-Muraru, Gu, Haroun, Berrada, Chen, Srinivasan, Desjardins, Doucet, Budden, Teh, Pascanu, Freitas, and Gulcehre}}}
+\bibcite{ding2024longrope}{{18}{2024{}}{{Ding et~al.}}{{Ding, Zhang, Zhang, Xu, Shang, Xu, Yang, and Yang}}}
+\bibcite{ding2024longropeextendingllmcontext}{{19}{2024{}}{{Ding et~al.}}{{Ding, Zhang, Zhang, Xu, Shang, Xu, Yang, and Yang}}}
+\bibcite{dupont2019augmentedneuralodes}{{20}{2019}{{Dupont et~al.}}{{Dupont, Doucet, and Teh}}}
+\bibcite{fu2023hungryhungryhipposlanguage}{{21}{2023}{{Fu et~al.}}{{Fu, Dao, Saab, Thomas, Rudra, and Ré}}}
+\bibcite{gu2024mamba1}{{22}{2024{}}{{Gu and Dao}}{{}}}
+\bibcite{gu2024mambalineartimesequencemodeling}{{23}{2024{}}{{Gu and Dao}}{{}}}
+\bibcite{gu2021combiningrecurrentconvolutionalcontinuoustime}{{24}{2021}{{Gu et~al.}}{{Gu, Johnson, Goel, Saab, Dao, Rudra, and Ré}}}
+\bibcite{gu2022trainhippostatespace}{{25}{2022}{{Gu et~al.}}{{Gu, Johnson, Timalsina, Rudra, and Ré}}}
+\bibcite{guo2022attention}{{26}{2022}{{Guo et~al.}}{{Guo, Xu, Liu, Liu, Jiang, Mu, Zhang, Martin, Cheng, and Hu}}}
+\bibcite{gupta2023simplifyingunderstandingstatespace}{{27}{2023}{{Gupta et~al.}}{{Gupta, Mehta, and Berant}}}
+\bibcite{he2015deepresiduallearningimage}{{28}{2015}{{He et~al.}}{{He, Zhang, Ren, and Sun}}}
+\bibcite{He_2016_CVPR}{{29}{2016}{{He et~al.}}{{He, Zhang, Ren, and Sun}}}
+\bibcite{herrmann2019optimalcheckpointingheterogeneouschains}{{30}{2019}{{Herrmann et~al.}}{{Herrmann, Beaumont, Eyraud-Dubois, Hermann, Joly, and Shilova}}}
+\bibcite{Jaeger2005ATO}{{31}{2005}{{Jaeger}}{{}}}
+\bibcite{adjointjohnson2007}{{32}{2007}{{Johnson}}{{}}}
+\bibcite{NEURIPS2020_c3581d21}{{33}{2020}{{Kaul}}{{}}}
+\bibcite{kirillov2023segment}{{34}{2023}{{Kirillov et~al.}}{{Kirillov, Mintun, Ravi, Mao, Rolland, Gustafson, Xiao, Whitehead, Berg, Lo, et~al.}}}
+\bibcite{longchat2023}{{35}{2023}{{Li* et~al.}}{{Li*, Shao*, Xie, Sheng, Zheng, Gonzalez, Stoica, Ma, and Zhang}}}
+\bibcite{li2024longcontextllmsstrugglelong}{{36}{2024}{{Li et~al.}}{{Li, Zhang, Do, Yue, and Chen}}}
+\bibcite{lieber2024jambahybridtransformermambalanguage}{{37}{2024}{{Lieber et~al.}}{{Lieber, Lenz, Bata, Cohen, Osin, Dalmedigos, Safahi, Meirom, Belinkov, Shalev-Shwartz, Abend, Alon, Asida, Bergman, Glozman, Gokhman, Manevich, Ratner, Rozen, Shwartz, Zusman, and Shoham}}}
+\bibcite{liu2023ringattentionblockwisetransformers}{{38}{2023}{{Liu et~al.}}{{Liu, Zaharia, and Abbeel}}}
+\bibcite{liu2024worldmodelmillionlengthvideo}{{39}{2024}{{Liu et~al.}}{{Liu, Yan, Zaharia, and Abbeel}}}
+\bibcite{dubey2024llama3herdmodels2}{{40}{2024}{{Meta et~al.}}{{}}}
+\bibcite{micikevicius2018mixedprecisiontraining}{{41}{2018}{{Micikevicius et~al.}}{{Micikevicius, Narang, Alben, Diamos, Elsen, Garcia, Ginsburg, Houston, Kuchaiev, Venkatesh, and Wu}}}
+\bibcite{novak2022fastfinitewidthneural}{{42}{2022}{{Novak et~al.}}{{Novak, Sohl-Dickstein, and Schoenholz}}}
+\bibcite{nvidiamvp}{{43}{2024}{{NVIDIA}}{{}}}
+\bibcite{openai2024gpt4technicalreport2}{{44}{2024}{{OpenAI et~al.}}{{}}}
+\bibcite{orvieto2023resurrectingrecurrentneuralnetworks}{{45}{2023}{{Orvieto et~al.}}{{Orvieto, Smith, Gu, Fernando, Gulcehre, Pascanu, and De}}}
+\bibcite{pascanu2013difficultytrainingrecurrentneural}{{46}{2013}{{Pascanu et~al.}}{{Pascanu, Mikolov, and Bengio}}}
+\bibcite{paszke2019pytorchimperativestylehighperformance}{{47}{2019}{{Paszke et~al.}}{{Paszke, Gross, Massa, Lerer, Bradbury, Chanan, Killeen, Lin, Gimelshein, Antiga, Desmaison, Köpf, Yang, DeVito, Raison, Tejani, Chilamkurthy, Steiner, Fang, Bai, and Chintala}}}
+\bibcite{peebles2023scalable}{{48}{2023}{{Peebles and Xie}}{{}}}
+\bibcite{peng2023rwkvreinventingrnnstransformer}{{49}{2023{}}{{Peng et~al.}}{{Peng, Alcaide, Anthony, Albalak, Arcadinho, Biderman, Cao, Cheng, Chung, Grella, GV, He, Hou, Lin, Kazienko, Kocon, Kong, Koptyra, Lau, Mantri, Mom, Saito, Song, Tang, Wang, Wind, Wozniak, Zhang, Zhang, Zhao, Zhou, Zhou, Zhu, and Zhu}}}
+\bibcite{peng2023yarnefficientcontextwindow}{{50}{2023{}}{{Peng et~al.}}{{Peng, Quesnelle, Fan, and Shippole}}}
+\bibcite{pióro2024moemambaefficientselectivestate}{{51}{2024}{{Pióro et~al.}}{{Pióro, Ciebiera, Król, Ludziejewski, Krutul, Krajewski, Antoniak, Miłoś, Cygan, and Jaszczur}}}
+\bibcite{rajbhandari2020zero}{{52}{2020{}}{{Rajbhandari et~al.}}{{Rajbhandari, Rasley, Ruwase, and He}}}
+\bibcite{rajbhandari2020zeromemoryoptimizationstraining}{{53}{2020{}}{{Rajbhandari et~al.}}{{Rajbhandari, Rasley, Ruwase, and He}}}
+\bibcite{ren2021zerooffloaddemocratizingbillionscalemodel}{{54}{2021}{{Ren et~al.}}{{Ren, Rajbhandari, Aminabadi, Ruwase, Yang, Zhang, Li, and He}}}
+\bibcite{shah2024flashattention3fastaccurateattention}{{55}{2024}{{Shah et~al.}}{{Shah, Bikshandi, Zhang, Thakkar, Ramani, and Dao}}}
+\bibcite{sohoni2022lowmemoryneuralnetworktraining}{{56}{2022}{{Sohoni et~al.}}{{Sohoni, Aberger, Leszczynski, Zhang, and Ré}}}
+\bibcite{tallec2017unbiasingtruncatedbackpropagationtime}{{57}{2017}{{Tallec and Ollivier}}{{}}}
+\bibcite{tworkowski2023focusedtransformercontrastivetraining}{{58}{2023}{{Tworkowski et~al.}}{{Tworkowski, Staniszewski, Pacek, Wu, Michalewski, and Miłoś}}}
+\bibcite{ntkReddit2023}{{59}{2023}{{users}}{{}}}
+\bibcite{vaswani2023attentionneed}{{60}{2023}{{Vaswani et~al.}}{{Vaswani, Shazeer, Parmar, Uszkoreit, Jones, Gomez, Kaiser, and Polosukhin}}}
+\bibcite{Verbraeken_2020}{{61}{2020}{{Verbraeken et~al.}}{{Verbraeken, Wolting, Katzy, Kloppenburg, Verbelen, and Rellermeyer}}}
+\bibcite{waleffe2024empiricalstudymambabasedlanguage}{{62}{2024}{{Waleffe et~al.}}{{Waleffe, Byeon, Riach, Norick, Korthikanti, Dao, Gu, Hatamizadeh, Singh, Narayanan, Kulshreshtha, Singh, Casper, Kautz, Shoeybi, and Catanzaro}}}
+\bibcite{wang2023statespacemodelslayerwisenonlinearity}{{63}{2023}{{Wang and Xue}}{{}}}
+\bibcite{bptt}{{64}{1990}{{Werbos}}{{}}}
+\bibcite{xiao2024efficientstreaminglanguagemodels}{{65}{2024}{{Xiao et~al.}}{{Xiao, Tian, Chen, Han, and Lewis}}}
+\bibcite{xu2022characteristicneuralordinarydifferential}{{66}{2022}{{Xu et~al.}}{{Xu, Hasan, Elkhalil, Ding, and Tarokh}}}
+\bibcite{yang2021focal}{{67}{2021}{{Yang et~al.}}{{Yang, Li, Zhang, Dai, Xiao, Yuan, and Gao}}}
+\bibcite{zhang2024soaring4k400kextending}{{68}{2024}{{Zhang et~al.}}{{Zhang, Liu, Xiao, Shao, Ye, and Dou}}}
+\bibcite{zhao2023pytorchfsdpexperiencesscaling}{{69}{2023}{{Zhao et~al.}}{{Zhao, Gu, Varma, Luo, Huang, Xu, Wright, Shojanazeri, Ott, Shleifer, Desmaison, Balioglu, Damania, Nguyen, Chauhan, Hao, Mathews, and Li}}}
+\bibstyle{plainnat}
+\@writefile{toc}{\contentsline {section}{\numberline {A}Appendix}{14}{appendix.A}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsection}{\numberline {A.1}Proof for proposition \ref {prop:onessm}}{14}{subsection.A.1}\protected@file@percent }
+\newlabel{sec:proofOnessm}{{A.1}{14}{Proof for proposition \ref {prop:onessm}}{subsection.A.1}{}}
+\newlabel{proof:onessm}{{1}{14}{Proof for proposition \ref {prop:onessm}}{proof.1}{}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {A.2}Proof for proposition \ref {prop:multssm}}{15}{subsection.A.2}\protected@file@percent }
+\newlabel{sec:proofMultssm}{{A.2}{15}{Proof for proposition \ref {prop:multssm}}{subsection.A.2}{}}
+\newlabel{proof:multssm}{{2}{15}{Proof for proposition \ref {prop:multssm}}{proof.2}{}}
+\newlabel{eqn:resnet}{{11}{16}{Proof for proposition \ref {prop:multssm}}{equation.11}{}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {A.3}Proof of concept for VJP}{16}{subsection.A.3}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsection}{\numberline {A.4}Distributed tensors' locations}{17}{subsection.A.4}\protected@file@percent }
+\newlabel{sec:dist}{{A.4}{17}{Distributed tensors' locations}{subsection.A.4}{}}
+\@writefile{lot}{\contentsline {table}{\numberline {2}{\ignorespaces Tensors stored on each GPU, part 1.}}{17}{table.caption.21}\protected@file@percent }
+\newlabel{tab:dist1}{{2}{17}{Tensors stored on each GPU, part 1}{table.caption.21}{}}
+\@writefile{lot}{\contentsline {table}{\numberline {3}{\ignorespaces Tensors stored on each GPU, part 2.}}{17}{table.caption.22}\protected@file@percent }
+\newlabel{tab:dist2}{{3}{17}{Tensors stored on each GPU, part 2}{table.caption.22}{}}
+\@writefile{lot}{\contentsline {table}{\numberline {4}{\ignorespaces Tensors stored on each GPU, part 3.}}{17}{table.caption.23}\protected@file@percent }
+\newlabel{tab:dist3}{{4}{17}{Tensors stored on each GPU, part 3}{table.caption.23}{}}
+\@writefile{lot}{\contentsline {table}{\numberline {5}{\ignorespaces Tensors stored on each GPU, part 4.}}{17}{table.caption.24}\protected@file@percent }
+\newlabel{tab:dist4}{{5}{17}{Tensors stored on each GPU, part 4}{table.caption.24}{}}
+\@writefile{lot}{\contentsline {table}{\numberline {6}{\ignorespaces Tensors stored on each GPU, part 5.}}{17}{table.caption.25}\protected@file@percent }
+\newlabel{tab:dist5}{{6}{17}{Tensors stored on each GPU, part 5}{table.caption.25}{}}
+\gdef \@abspage@last{17}

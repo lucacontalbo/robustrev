@@ -1,0 +1,221 @@
+\begin{thebibliography}{29}
+\providecommand{\natexlab}[1]{#1}
+
+\bibitem[{Achiam et~al.(2023)Achiam, Adler, Agarwal, Ahmad, Akkaya, Aleman,
+  Almeida, Altenschmidt, Altman, Anadkat et~al.}]{achiam2023gpt}
+Josh Achiam, Steven Adler, Sandhini Agarwal, Lama Ahmad, Ilge Akkaya,
+  Florencia~Leoni Aleman, Diogo Almeida, Janko Altenschmidt, Sam Altman,
+  Shyamal Anadkat, et~al. 2023.
+\newblock Gpt-4 technical report.
+\newblock \emph{arXiv preprint arXiv:2303.08774}.
+
+\bibitem[{bench authors(2023)}]{srivastava2023beyond}
+BIG bench authors. 2023.
+\newblock \href {https://openreview.net/forum?id=uyTL5Bvosj} {Beyond the
+  imitation game: Quantifying and extrapolating the capabilities of language
+  models}.
+\newblock \emph{Transactions on Machine Learning Research}.
+
+\bibitem[{Brown(2020)}]{brown2020language}
+Tom~B Brown. 2020.
+\newblock Language models are few-shot learners.
+\newblock \emph{arXiv preprint arXiv:2005.14165}.
+
+\bibitem[{Chen et~al.(2022)Chen, Ma, Wang, and Cohen}]{chen2022program}
+Wenhu Chen, Xueguang Ma, Xinyi Wang, and William~W Cohen. 2022.
+\newblock Program of thoughts prompting: Disentangling computation from
+  reasoning for numerical reasoning tasks.
+\newblock \emph{arXiv preprint arXiv:2211.12588}.
+
+\bibitem[{Chowdhery et~al.(2023)Chowdhery, Narang, Devlin, Bosma, Mishra,
+  Roberts, Barham, Chung, Sutton, Gehrmann et~al.}]{chowdhery2023palm}
+Aakanksha Chowdhery, Sharan Narang, Jacob Devlin, Maarten Bosma, Gaurav Mishra,
+  Adam Roberts, Paul Barham, Hyung~Won Chung, Charles Sutton, Sebastian
+  Gehrmann, et~al. 2023.
+\newblock Palm: Scaling language modeling with pathways.
+\newblock \emph{Journal of Machine Learning Research}, 24(240):1--113.
+
+\bibitem[{Chung et~al.(2024)Chung, Hou, Longpre, Zoph, Tay, Fedus, Li, Wang,
+  Dehghani, Brahma et~al.}]{chung2024scaling}
+Hyung~Won Chung, Le~Hou, Shayne Longpre, Barret Zoph, Yi~Tay, William Fedus,
+  Yunxuan Li, Xuezhi Wang, Mostafa Dehghani, Siddhartha Brahma, et~al. 2024.
+\newblock Scaling instruction-finetuned language models.
+\newblock \emph{Journal of Machine Learning Research}, 25(70):1--53.
+
+\bibitem[{Cobbe et~al.(2021)Cobbe, Kosaraju, Bavarian, Chen, Jun, Kaiser,
+  Plappert, Tworek, Hilton, Nakano, Hesse, and Schulman}]{cobbe2021gsm8k}
+Karl Cobbe, Vineet Kosaraju, Mohammad Bavarian, Mark Chen, Heewoo Jun, Lukasz
+  Kaiser, Matthias Plappert, Jerry Tworek, Jacob Hilton, Reiichiro Nakano,
+  Christopher Hesse, and John Schulman. 2021.
+\newblock Training verifiers to solve math word problems.
+\newblock \emph{arXiv preprint arXiv:2110.14168}.
+
+\bibitem[{Ding et~al.(2022)Ding, Qin, Yang, Wei, Yang, Su, Hu, Chen, Chan, Chen
+  et~al.}]{ding2022delta}
+Ning Ding, Yujia Qin, Guang Yang, Fuchao Wei, Zonghan Yang, Yusheng Su,
+  Shengding Hu, Yulin Chen, Chi-Min Chan, Weize Chen, et~al. 2022.
+\newblock Delta tuning: A comprehensive study of parameter efficient methods
+  for pre-trained language models.
+\newblock \emph{arXiv preprint arXiv:2203.06904}.
+
+\bibitem[{Dubey et~al.(2024)Dubey, Jauhri, Pandey, Kadian, Al-Dahle, Letman,
+  Mathur, Schelten, Yang, Fan et~al.}]{dubey2024llama}
+Abhimanyu Dubey, Abhinav Jauhri, Abhinav Pandey, Abhishek Kadian, Ahmad
+  Al-Dahle, Aiesha Letman, Akhil Mathur, Alan Schelten, Amy Yang, Angela Fan,
+  et~al. 2024.
+\newblock The llama 3 herd of models.
+\newblock \emph{arXiv preprint arXiv:2407.21783}.
+
+\bibitem[{Dziri et~al.(2024)Dziri, Lu, Sclar, Li, Jiang, Lin, Welleck, West,
+  Bhagavatula, Le~Bras et~al.}]{dziri2024faith}
+Nouha Dziri, Ximing Lu, Melanie Sclar, Xiang~Lorraine Li, Liwei Jiang,
+  Bill~Yuchen Lin, Sean Welleck, Peter West, Chandra Bhagavatula, Ronan
+  Le~Bras, et~al. 2024.
+\newblock Faith and fate: Limits of transformers on compositionality.
+\newblock \emph{Advances in Neural Information Processing Systems}, 36.
+
+\bibitem[{Gao et~al.(2023)Gao, Madaan, Zhou, Alon, Liu, Yang, Callan, and
+  Neubig}]{gao2023pal}
+Luyu Gao, Aman Madaan, Shuyan Zhou, Uri Alon, Pengfei Liu, Yiming Yang, Jamie
+  Callan, and Graham Neubig. 2023.
+\newblock Pal: Program-aided language models.
+\newblock In \emph{International Conference on Machine Learning}, pages
+  10764--10799. PMLR.
+
+\bibitem[{Garreth(2024)}]{tweet2024garrethlee}
+Lee Garreth. 2024.
+\newblock Tweet.
+\newblock https://x.com/garrethleee/status/1860039446311371132.
+\newblock A tweet about a paper, not yet published as of the time of this
+  writing.
+
+\bibitem[{Hendrycks et~al.(2021)Hendrycks, Burns, Kadavath, Arora, Basart,
+  Tang, Song, and Steinhardt}]{hendrycksmath2021}
+Dan Hendrycks, Collin Burns, Saurav Kadavath, Akul Arora, Steven Basart, Eric
+  Tang, Dawn Song, and Jacob Steinhardt. 2021.
+\newblock Measuring mathematical problem solving with the math dataset.
+\newblock \emph{NeurIPS}.
+
+\bibitem[{Houlsby et~al.(2019)Houlsby, Giurgiu, Jastrzebski, Morrone,
+  De~Laroussilhe, Gesmundo, Attariyan, and Gelly}]{houlsby2019parameter}
+Neil Houlsby, Andrei Giurgiu, Stanislaw Jastrzebski, Bruna Morrone, Quentin
+  De~Laroussilhe, Andrea Gesmundo, Mona Attariyan, and Sylvain Gelly. 2019.
+\newblock Parameter-efficient transfer learning for nlp.
+\newblock In \emph{International conference on machine learning}, pages
+  2790--2799. PMLR.
+
+\bibitem[{Imani et~al.(2023)Imani, Du, and
+  Shrivastava}]{imani2023mathpromptermathematicalreasoningusing}
+Shima Imani, Liang Du, and Harsh Shrivastava. 2023.
+\newblock \href {https://arxiv.org/abs/2303.05398} {Mathprompter: Mathematical
+  reasoning using large language models}.
+\newblock \emph{Preprint}, arXiv:2303.05398.
+
+\bibitem[{Kim et~al.(2021)Kim, Hong, Kim, Kang, and Myaeng}]{kim2021have}
+Jeonghwan Kim, Giwon Hong, Kyung-min Kim, Junmo Kang, and Sung-Hyon Myaeng.
+  2021.
+\newblock Have you seen that number? investigating extrapolation in question
+  answering models.
+\newblock In \emph{Proceedings of the 2021 Conference on Empirical Methods in
+  Natural Language Processing}, pages 7031--7037.
+
+\bibitem[{Lee et~al.(2023)Lee, Sreenivasan, Lee, Lee, and
+  Papailiopoulos}]{lee2023teachingarithmeticsmalltransformers}
+Nayoung Lee, Kartik Sreenivasan, Jason~D. Lee, Kangwook Lee, and Dimitris
+  Papailiopoulos. 2023.
+\newblock \href {https://arxiv.org/abs/2307.03381} {Teaching arithmetic to
+  small transformers}.
+\newblock \emph{Preprint}, arXiv:2307.03381.
+
+\bibitem[{Lewis et~al.(2020)Lewis, Perez, Piktus, Petroni, Karpukhin, Goyal,
+  K{\"u}ttler, Lewis, Yih, Rockt{\"a}schel et~al.}]{lewis2020retrieval}
+Patrick Lewis, Ethan Perez, Aleksandra Piktus, Fabio Petroni, Vladimir
+  Karpukhin, Naman Goyal, Heinrich K{\"u}ttler, Mike Lewis, Wen-tau Yih, Tim
+  Rockt{\"a}schel, et~al. 2020.
+\newblock Retrieval-augmented generation for knowledge-intensive nlp tasks.
+\newblock \emph{Advances in Neural Information Processing Systems},
+  33:9459--9474.
+
+\bibitem[{Liu and Low(2023)}]{liu2023goatfinetunedllamaoutperforms}
+Tiedong Liu and Bryan Kian~Hsiang Low. 2023.
+\newblock \href {https://arxiv.org/abs/2305.14201} {Goat: Fine-tuned llama
+  outperforms gpt-4 on arithmetic tasks}.
+\newblock \emph{Preprint}, arXiv:2305.14201.
+
+\bibitem[{McLeish et~al.(2024)McLeish, Bansal, Stein, Jain, Kirchenbauer,
+  Bartoldson, Kailkhura, Bhatele, Geiping, Schwarzschild
+  et~al.}]{mcleish2024transformers}
+Sean McLeish, Arpit Bansal, Alex Stein, Neel Jain, John Kirchenbauer, Brian~R
+  Bartoldson, Bhavya Kailkhura, Abhinav Bhatele, Jonas Geiping, Avi
+  Schwarzschild, et~al. 2024.
+\newblock Transformers can do arithmetic with the right embeddings.
+\newblock \emph{arXiv preprint arXiv:2405.17399}.
+
+\bibitem[{Nye et~al.(2021)Nye, Andreassen, Gur-Ari, Michalewski, Austin,
+  Bieber, Dohan, Lewkowycz, Bosma, Luan et~al.}]{nye2021show}
+Maxwell Nye, Anders~Johan Andreassen, Guy Gur-Ari, Henryk Michalewski, Jacob
+  Austin, David Bieber, David Dohan, Aitor Lewkowycz, Maarten Bosma, David
+  Luan, et~al. 2021.
+\newblock Show your work: Scratchpads for intermediate computation with
+  language models.
+\newblock \emph{arXiv preprint arXiv:2112.00114}.
+
+\bibitem[{Qu et~al.(2024)Qu, Dai, Wei, Cai, Wang, Yin, Xu, and
+  Wen}]{qu2024tool}
+Changle Qu, Sunhao Dai, Xiaochi Wei, Hengyi Cai, Shuaiqiang Wang, Dawei Yin,
+  Jun Xu, and Ji-Rong Wen. 2024.
+\newblock Tool learning with large language models: A survey.
+\newblock \emph{arXiv preprint arXiv:2405.17935}.
+
+\bibitem[{Schick et~al.(2023)Schick, Dwivedi-Yu, Dessì, Raileanu, Lomeli,
+  Zettlemoyer, Cancedda, and Scialom}]{schick2023toolformerlanguagemodelsteach}
+Timo Schick, Jane Dwivedi-Yu, Roberto Dessì, Roberta Raileanu, Maria Lomeli,
+  Luke Zettlemoyer, Nicola Cancedda, and Thomas Scialom. 2023.
+\newblock \href {https://arxiv.org/abs/2302.04761} {Toolformer: Language models
+  can teach themselves to use tools}.
+\newblock \emph{Preprint}, arXiv:2302.04761.
+
+\bibitem[{Thawani et~al.(2021)Thawani, Pujara, Szekely, and
+  Ilievski}]{thawani2021representing}
+Avijit Thawani, Jay Pujara, Pedro~A Szekely, and Filip Ilievski. 2021.
+\newblock Representing numbers in nlp: a survey and a vision.
+\newblock \emph{arXiv preprint arXiv:2103.13136}.
+
+\bibitem[{Thoppilan et~al.(2022)Thoppilan, De~Freitas, Hall, Shazeer,
+  Kulshreshtha, Cheng, Jin, Bos, Baker, Du et~al.}]{thoppilan2022lamda}
+Romal Thoppilan, Daniel De~Freitas, Jamie Hall, Noam Shazeer, Apoorv
+  Kulshreshtha, Heng-Tze Cheng, Alicia Jin, Taylor Bos, Leslie Baker, Yu~Du,
+  et~al. 2022.
+\newblock Lamda: Language models for dialog applications.
+\newblock \emph{arXiv preprint arXiv:2201.08239}.
+
+\bibitem[{Touvron et~al.(2023)Touvron, Lavril, Izacard, Martinet, Lachaux,
+  Lacroix, Rozi{\`e}re, Goyal, Hambro, Azhar et~al.}]{touvron2023llama}
+Hugo Touvron, Thibaut Lavril, Gautier Izacard, Xavier Martinet, Marie-Anne
+  Lachaux, Timoth{\'e}e Lacroix, Baptiste Rozi{\`e}re, Naman Goyal, Eric
+  Hambro, Faisal Azhar, et~al. 2023.
+\newblock Llama: Open and efficient foundation language models.
+\newblock \emph{arXiv preprint arXiv:2302.13971}.
+
+\bibitem[{Wang et~al.(2019)Wang, Singh, Michael, Hill, Levy, and
+  Bowman}]{wang2019gluemultitaskbenchmarkanalysis}
+Alex Wang, Amanpreet Singh, Julian Michael, Felix Hill, Omer Levy, and
+  Samuel~R. Bowman. 2019.
+\newblock \href {https://arxiv.org/abs/1804.07461} {Glue: A multi-task
+  benchmark and analysis platform for natural language understanding}.
+\newblock \emph{Preprint}, arXiv:1804.07461.
+
+\bibitem[{Wei et~al.(2023)Wei, Wang, Schuurmans, Bosma, Ichter, Xia, Chi, Le,
+  and Zhou}]{wei2023chainofthoughtpromptingelicitsreasoning}
+Jason Wei, Xuezhi Wang, Dale Schuurmans, Maarten Bosma, Brian Ichter, Fei Xia,
+  Ed~Chi, Quoc Le, and Denny Zhou. 2023.
+\newblock \href {https://arxiv.org/abs/2201.11903} {Chain-of-thought prompting
+  elicits reasoning in large language models}.
+\newblock \emph{Preprint}, arXiv:2201.11903.
+
+\bibitem[{Yuan et~al.(2023)Yuan, Yuan, Tan, Wang, and Huang}]{yuan2023well}
+Zheng Yuan, Hongyi Yuan, Chuanqi Tan, Wei Wang, and Songfang Huang. 2023.
+\newblock How well do large language models perform in arithmetic tasks?
+\newblock \emph{arXiv preprint arXiv:2304.02015}.
+
+\end{thebibliography}

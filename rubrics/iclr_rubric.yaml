@@ -1,0 +1,187 @@
+# ICLR 2025 review form, as used on OpenReview.
+# Source: https://iclr.cc/Conferences/2025/ReviewerGuide
+conference: ICLR
+edition: 2025
+notes: >
+  Mirrors the official OpenReview "Official Review" form. Each field below is
+  meant to be turned into a prompt for an LLM reviewer: `question` is the
+  instruction shown to the reviewer, `type` says what shape the answer must
+  take, and `scale`/`options` (when present) enumerate the only legal values.
+
+fields:
+  - id: summary
+    question: >
+      Summarize what the paper claims to contribute. Be positive and
+      constructive, treating the submission as if it were your own.
+    type: text
+    required: true
+
+  - id: soundness
+    question: >
+      Please assign the submission a numerical rating for soundness: the
+      soundness of the technical claims, experimental and research
+      methodology, and whether the central claims of the paper are
+      adequately supported with evidence.
+    type: score
+    required: true
+    scale:
+      - value: 4
+        label: excellent
+      - value: 3
+        label: good
+      - value: 2
+        label: fair
+      - value: 1
+        label: poor
+
+  - id: presentation
+    question: >
+      Please assign the submission a numerical rating for presentation: the
+      quality of the writing style and clarity, as well as the
+      contextualization relative to prior work.
+    type: score
+    required: true
+    scale:
+      - value: 4
+        label: excellent
+      - value: 3
+        label: good
+      - value: 2
+        label: fair
+      - value: 1
+        label: poor
+
+  - id: contribution
+    question: >
+      Please assign the submission a numerical rating for contribution: the
+      significance of the contributions made, i.e. to what extent the goals
+      are novel, the submission advances the state of the art and/or
+      transfers knowledge, and the results are significant.
+    type: score
+    required: true
+    scale:
+      - value: 4
+        label: excellent
+      - value: 3
+        label: good
+      - value: 2
+        label: fair
+      - value: 1
+        label: poor
+
+  - id: strengths
+    question: "List the strong points of the paper. Be as comprehensive as possible."
+    type: text
+    required: true
+
+  - id: weaknesses
+    question: "List the weak points of the paper. Be as comprehensive as possible."
+    type: text
+    required: true
+
+  - id: questions
+    question: >
+      List questions that you would like the authors to answer, e.g. to
+      clarify a weakness or limitation raised above.
+    type: text
+    required: true
+
+  - id: flag_for_ethics_review
+    question: >
+      Does this submission raise ethical concerns that require review by the
+      ethics committee?
+    type: multi_select
+    required: true
+    options:
+      - "No ethics review needed."
+      - "Yes, discrimination / bias / fairness concerns"
+      - "Yes, inadequate data and/or algorithm evaluation"
+      - "Yes, privacy and security concerns"
+      - "Yes, legal compliance concerns (e.g. GDPR, copyright, terms of use)"
+      - "Yes, research integrity concerns (e.g. plagiarism, dual submission)"
+      - "Yes, responsible research practice concerns (e.g. IRB, informed consent, safety)"
+      - "Yes, potential for unintentional or unforeseeable harm"
+      - "Yes, potentially harmful insights, methodologies, or applications (dual use)"
+      - "Yes, other reasons (please specify below)"
+
+  - id: details_of_ethics_concerns
+    question: "If applicable, describe the ethical concerns in detail."
+    type: text
+    required: false
+    depends_on: flag_for_ethics_review
+
+  - id: rating
+    question: >
+      Please provide an overall recommendation for this submission, taking
+      the previous ratings into account.
+    type: score
+    required: true
+    scale:
+      - value: 10
+        label: "Strong accept, should be highlighted at the conference"
+        description: >
+          Technically flawless paper with groundbreaking impact on one or
+          more areas, with exceptionally strong evaluation, reproducibility,
+          and resources, and no unaddressed ethical considerations.
+      - value: 8
+        label: "Accept, good paper"
+        description: >
+          Technically solid paper, with high impact on at least one
+          sub-area, or moderate-to-high impact on more than one area, with
+          good-to-excellent evaluation, resources, reproducibility, and no
+          unaddressed ethical considerations.
+      - value: 6
+        label: "Marginally above the acceptance threshold"
+        description: >
+          Technically solid paper where reasons to accept, e.g. good
+          evaluation, outweigh reasons to reject, e.g. limited evaluation.
+          Use this rating sparingly.
+      - value: 5
+        label: "Marginally below the acceptance threshold"
+        description: >
+          Technically solid paper where reasons to reject, e.g. limited
+          evaluation, outweigh reasons to accept, e.g. good evaluation. Use
+          this rating sparingly.
+      - value: 3
+        label: "Reject, not good enough"
+        description: >
+          A paper with technical flaws, weak evaluation, inadequate
+          reproducibility, or incompletely addressed ethical considerations.
+      - value: 1
+        label: "Strong reject"
+        description: >
+          For instance, a paper with well-known results, fatal flaws, or
+          unaddressed ethical considerations.
+
+  - id: confidence
+    question: "How confident are you in your overall assessment?"
+    type: score
+    required: true
+    scale:
+      - value: 5
+        label: "You are absolutely certain about your assessment."
+        description: >
+          You are very familiar with the related work and checked the
+          math/other details carefully.
+      - value: 4
+        label: "You are confident in your assessment, but not absolutely certain."
+        description: >
+          It is unlikely, but not impossible, that you did not understand
+          some parts of the submission or that you are unfamiliar with some
+          pieces of related work.
+      - value: 3
+        label: "You are fairly confident in your assessment."
+        description: >
+          It is possible that you did not understand some parts of the
+          submission or that you are unfamiliar with some pieces of related
+          work. Math/other details were not carefully checked.
+      - value: 2
+        label: "You are willing to defend your assessment, but it is quite likely that you did not understand central parts of the submission."
+        description: >
+          You are unfamiliar with some pieces of related work. Math/other
+          details were not carefully checked.
+      - value: 1
+        label: "Your assessment is an educated guess."
+        description: >
+          The submission is not in your area, or the submission was very
+          hard to understand. Math/other details were not carefully checked.
