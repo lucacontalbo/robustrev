@@ -4,10 +4,17 @@
 # Any key beyond model_id/model_name/model_class is forwarded as-is to the
 # model class's constructor (see model_kwargs() in robustrev.py). For a
 # vllm entry that means models.VLLMModel's optional kwargs:
-#   base_url:    OpenAI-compatible endpoint of your vllm server
-#                (default: http://localhost:8000/v1)
+#   base_url:    OpenAI-compatible endpoint of your vllm server. Leave unset
+#                to pick up $OPENAI_BASE_URL at run time (falls back to
+#                http://localhost:8000/v1 if that's unset too) — this is
+#                what lets a Slurm array job with one vLLM server per task,
+#                each on its own port, use a single shared entry here: just
+#                `export OPENAI_BASE_URL=http://127.0.0.1:$PORT/v1` before
+#                calling robustrev.py. Setting it here pins it and
+#                overrides the env var.
 #   api_key:     sent as the bearer token; vllm ignores it unless you started
-#                the server with --api-key (default: "EMPTY")
+#                the server with --api-key. Same env-var fallback as
+#                base_url, via $OPENAI_API_KEY (default: "EMPTY")
 #   pdf_capable: set true only if the served model actually accepts a PDF
 #                as an input document (vision-capable models, e.g. Llama
 #                3.2 Vision or Qwen2-VL) — Reviewer then sends the PDF
@@ -33,5 +40,4 @@
 - model_id: llama-3.2-11b-vision
   model_name: meta-llama/Llama-3.2-11B-Vision-Instruct
   model_class: vllm
-  base_url: http://localhost:8000/v1
   pdf_capable: true

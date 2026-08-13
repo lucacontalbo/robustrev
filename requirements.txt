@@ -4,6 +4,7 @@ latexmk
 pyyaml
 pypdf
 dotenv
+tqdm
 arize-phoenix-otel
 openinference-instrumentation-openai
 openinference-instrumentation-anthropic

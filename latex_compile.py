@@ -88,16 +88,27 @@ class LatexCompiler:
     def compile_pdf(self, project_dir):
         project_dir = Path(project_dir).resolve()
         root = self.find_root(project_dir)
-        subprocess.run(
-            # -g forces a full rebuild even if latexmk's cache thinks nothing
-            # changed; without it, a previously *failed* run (e.g. due to a
-            # missing font that's since been installed) leaves stale state
-            # that makes latexmk refuse to retry.
-            # -outdir=root.parent, not project_dir: see _trial_compile()'s
-            # docstring for why outdir and cwd must match.
-            ["latexmk", "-g", "-pdf", "-interaction=nonstopmode", "-halt-on-error", f"-outdir={root.parent}", root.name],
-            cwd=root.parent, check=True, timeout=self.timeout,
-        )
+        try:
+            subprocess.run(
+                # -g forces a full rebuild even if latexmk's cache thinks
+                # nothing changed; without it, a previously *failed* run
+                # (e.g. due to a missing font that's since been installed)
+                # leaves stale state that makes latexmk refuse to retry.
+                # -outdir=root.parent, not project_dir: see
+                # _trial_compile()'s docstring for why outdir and cwd must
+                # match.
+                # capture_output: this is the real, full build (unlike the
+                # quiet trial compiles in find_root()), so without this its
+                # entire pdflatex/bibtex log would stream straight to
+                # stdout on every call — capture it instead so callers doing
+                # many compiles in a row (review/perturb) stay quiet, and
+                # attach it to the exception below so a failure isn't silent.
+                ["latexmk", "-g", "-pdf", "-interaction=nonstopmode", "-halt-on-error", f"-outdir={root.parent}", root.name],
+                cwd=root.parent, check=True, capture_output=True, timeout=self.timeout,
+            )
+        except subprocess.CalledProcessError as e:
+            log = (e.stdout.decode(errors="ignore") + e.stderr.decode(errors="ignore")).strip()
+            raise RuntimeError(f"latexmk failed for {root.name}:\n{log}") from e
         return root.with_suffix(".pdf")
 
 

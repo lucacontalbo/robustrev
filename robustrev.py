@@ -7,6 +7,7 @@ from dotenv import load_dotenv
 load_dotenv()
 
 import yaml
+from tqdm import tqdm
 
 from latex_compile import LatexCompiler
 from perturber import Perturber
@@ -98,10 +99,12 @@ def review(args):
     else:
         jobs = [(p, p.name, perturbation_name(p)) for p in find_projects(directory, compiler)]
 
-    for project_dir, paper_name, pert_name in jobs:
+    bar = tqdm(jobs, desc="reviewing", unit="paper")
+    for project_dir, paper_name, pert_name in bar:
         base_dir = OUTPUT_DIR if pert_name is None else OUTPUT_DIR.parent / f"{OUTPUT_DIR.name}_{pert_name}"
         out_dir = base_dir / args.conference / args.model_id / paper_name
         label = f"{paper_name}/{pert_name}" if pert_name else paper_name
+        bar.set_postfix_str(label)
 
         try:
             pdf_path = compiler.compile_pdf(project_dir)
@@ -116,13 +119,13 @@ def review(args):
             tb = traceback.format_exc()
             out_dir.mkdir(parents=True, exist_ok=True)
             (out_dir / "error.txt").write_text(tb)
-            print(f"skipped {label}: {tb.rstrip().splitlines()[-1]} (see {out_dir / 'error.txt'})")
+            tqdm.write(f"skipped {label}: {tb.rstrip().splitlines()[-1]} (see {out_dir / 'error.txt'})")
             continue
 
         out_dir.mkdir(parents=True, exist_ok=True)
         shutil.copy(pdf_path, out_dir / pdf_path.name)
         (out_dir / "review.json").write_text(json.dumps(result, indent=2))
-        print(f"reviewed {label} -> {out_dir}")
+        tqdm.write(f"reviewed {label} -> {out_dir}")
 
 
 def perturb(args):
@@ -151,7 +154,9 @@ def perturb(args):
         raise ValueError(f"--conference is required to run review-based perturbation(s) {review_based}")
     review_cfg = load_model(args.review_model_id or args.model_id) if review_based else None
 
-    for project_dir in projects:
+    outer = tqdm(projects, desc="perturbing", unit="paper")
+    for project_dir in outer:
+        outer.set_postfix_str(project_dir.name)
         try:
             baseline_review = None
             if review_based:
@@ -161,7 +166,9 @@ def perturb(args):
                     **model_kwargs(review_cfg)
                 ).generate_review()
 
-            for pert_id in pert_ids:
+            inner = tqdm(pert_ids, desc=project_dir.name, unit="perturbation", leave=False)
+            for pert_id in inner:
+                inner.set_postfix_str(pert_id)
                 out_dir = PERTURBED_DIR / project_dir.name / pert_id
                 if out_dir.exists():
                     shutil.rmtree(out_dir)
@@ -173,14 +180,14 @@ def perturb(args):
                     changed = str(e)
 
                 if changed is True:
-                    print(f"perturbed {project_dir.name}/{pert_id} -> {out_dir}")
+                    tqdm.write(f"perturbed {project_dir.name}/{pert_id} -> {out_dir}")
                 else:
                     shutil.rmtree(out_dir)  # nothing changed; don't leave a copy identical to the original
                     reason = changed if isinstance(changed, str) else "no matching section, or its precondition wasn't met"
-                    print(f"skipped {project_dir.name}/{pert_id}: {reason}")
+                    tqdm.write(f"skipped {project_dir.name}/{pert_id}: {reason}")
         except Exception as e:
             tb = traceback.format_exc()
-            print(f"skipped {project_dir.name}: {e} (see traceback below)\n{tb}")
+            tqdm.write(f"skipped {project_dir.name}: {e} (see traceback below)\n{tb}")
 
 def main():
     parser = argparse.ArgumentParser(prog="robustrev")

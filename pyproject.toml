@@ -7,6 +7,7 @@ dependencies = [
     "openai",
     "pyyaml",
     "pypdf",
+    "tqdm",
 ]
 
 [project.scripts]
