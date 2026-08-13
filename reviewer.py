@@ -56,7 +56,7 @@ class Reviewer:
             "First, reason step by step about the paper and about each field of the review form.",
             f'When you are done reasoning, write the line "{FINAL_KEYWORD}" and, immediately after it,'
             " a single Python dict literal whose keys are exactly the field ids listed below (as strings)."
-            " Nothing may follow the dict literal.",
+            " Nothing may follow the dict literal. Make sure that the dict is in valid Python syntax, with quotes around the keys and string values.",
         ]
         if paper_text is not None:
             lines += ["", "# Paper", paper_text]
