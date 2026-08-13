@@ -1,4 +1,5 @@
 import ast
+from datetime import datetime, timezone
 from pathlib import Path
 
 import yaml
@@ -7,12 +8,33 @@ from pypdf import PdfReader
 import models
 
 RUBRIC_DIR = Path(__file__).parent / "rubrics"
+LOG_PATH = Path(__file__).parent / "log.txt"
 MODEL_CLASSES = {
     "anthropic": models.AnthropicModel,
     "openai": models.OpenAIModel,
     "vllm": models.VLLMModel,
 }
 FINAL_KEYWORD = "FINAL ANSWER:"
+# Models for which a direct-PDF submission has already failed once and been
+# logged to LOG_PATH in this process. A batch run reviews many papers with
+# the same model (a fresh Reviewer per paper), so this is keyed by model
+# identity, not by call, to log the fallback once per model rather than once
+# per paper.
+_pdf_fallback_logged = set()
+
+
+def _log_pdf_fallback(model_key, error, prompt):
+    if model_key in _pdf_fallback_logged:
+        return
+    _pdf_fallback_logged.add(model_key)
+    entry = (
+        f"[{datetime.now(timezone.utc).isoformat()}] {model_key}: direct PDF submission failed "
+        f"({error!r}); falling back to extracted text for the rest of this run.\n"
+        f"--- prompt sent after falling back to text ---\n{prompt}\n"
+        f"{'-' * 80}\n"
+    )
+    with LOG_PATH.open("a") as f:
+        f.write(entry)
 
 
 def _extract_braces(text):
@@ -71,13 +93,22 @@ class Reviewer:
         lines.append(f"\nAfter \"{FINAL_KEYWORD}\", return only the Python dict literal, no other text.")
         return "\n".join(lines)
 
+    def _extract_text(self):
+        return "\n".join(p.extract_text() or "" for p in PdfReader(self.pdf_path).pages)
+
     def generate_review(self, max_tokens=32768):
         # Prefer sending the PDF itself; only fall back to extracted text if
-        # the model can't take a document directly.
-        send_pdf = self.model.supports_pdf()
-        paper_text = None if send_pdf else "\n".join(p.extract_text() or "" for p in PdfReader(self.pdf_path).pages)
-        prompt = self.build_prompt(paper_text)
-        raw = self.model.generate(prompt, pdf_path=self.pdf_path if send_pdf else None, max_tokens=max_tokens)
+        # the model can't take a document directly, or claims to (e.g. a
+        # vision-capable vllm model) but actually rejects it at call time.
+        if self.model.supports_pdf():
+            try:
+                raw = self.model.generate(self.build_prompt(), pdf_path=self.pdf_path, max_tokens=max_tokens)
+            except Exception as e:
+                prompt = self.build_prompt(self._extract_text())
+                _log_pdf_fallback(f"{type(self.model).__name__}:{self.model.model}", e, prompt)
+                raw = self.model.generate(prompt, pdf_path=None, max_tokens=max_tokens)
+        else:
+            raw = self.model.generate(self.build_prompt(self._extract_text()), pdf_path=None, max_tokens=max_tokens)
         _, _, tail = raw.rpartition(FINAL_KEYWORD)  # tail == raw if the keyword is missing
         answers = ast.literal_eval(_extract_braces(tail))
         return {f["id"]: answers.get(f["id"]) for f in self.fields}

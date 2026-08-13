@@ -33,6 +33,13 @@ def load_model(model_id):
     raise ValueError(f"unknown model_id '{model_id}' in {CONFIG_PATH}")
 
 
+def model_kwargs(cfg):
+    """Extra models_config.yaml keys beyond the id/name/class routing
+    fields (e.g. base_url/api_key/pdf_capable on a vllm entry), forwarded
+    straight through to the model class's constructor."""
+    return {k: v for k, v in cfg.items() if k not in ("model_id", "model_name", "model_class")}
+
+
 def find_projects(directory, compiler):
     """A `directory` is either one LaTeX project itself, or a directory of them."""
     directory = Path(directory)
@@ -98,7 +105,9 @@ def review(args):
 
         try:
             pdf_path = compiler.compile_pdf(project_dir)
-            result = Reviewer(cfg["model_class"], cfg["model_name"], args.conference, pdf_path).generate_review()
+            result = Reviewer(
+                cfg["model_class"], cfg["model_name"], args.conference, pdf_path, **model_kwargs(cfg)
+            ).generate_review()
         except Exception:
             # Compilation or review can fail per paper/perturbation (e.g. a
             # perturbation broke LaTeX syntax); don't let one bad one abort
@@ -119,7 +128,7 @@ def review(args):
 def perturb(args):
     cfg = load_model(args.model_id)
     compiler = LatexCompiler()
-    perturber = Perturber(cfg["model_class"], cfg["model_name"])
+    perturber = Perturber(cfg["model_class"], cfg["model_name"], **model_kwargs(cfg))
 
     projects = find_projects(PAPERS_DIR, compiler)
     if args.papers:
@@ -148,7 +157,8 @@ def perturb(args):
             if review_based:
                 pdf_path = compiler.compile_pdf(project_dir)
                 baseline_review = Reviewer(
-                    review_cfg["model_class"], review_cfg["model_name"], args.conference, pdf_path
+                    review_cfg["model_class"], review_cfg["model_name"], args.conference, pdf_path,
+                    **model_kwargs(review_cfg)
                 ).generate_review()
 
             for pert_id in pert_ids:
