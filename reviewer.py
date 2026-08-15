@@ -110,5 +110,17 @@ class Reviewer:
         else:
             raw = self.model.generate(self.build_prompt(self._extract_text()), pdf_path=None, max_tokens=max_tokens)
         _, _, tail = raw.rpartition(FINAL_KEYWORD)  # tail == raw if the keyword is missing
-        answers = ast.literal_eval(_extract_braces(tail))
+        dict_literal = _extract_braces(tail)
+        try:
+            answers = ast.literal_eval(dict_literal)
+        except (ValueError, SyntaxError) as e:
+            # Re-raise with the text that failed to parse and the full model
+            # response attached, so the traceback logged by the caller (e.g.
+            # review()'s error.txt) is enough to diagnose a malformed dict
+            # literal without having to reproduce the model call.
+            raise ValueError(
+                f"ast.literal_eval failed on model output: {e}\n"
+                f"--- text passed to ast.literal_eval ---\n{dict_literal}\n"
+                f"--- original model response ---\n{raw}"
+            ) from e
         return {f["id"]: answers.get(f["id"]) for f in self.fields}
