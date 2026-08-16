@@ -45,7 +45,7 @@ def find_projects(directory, compiler):
     """A `directory` is either one LaTeX project itself, or a directory of them."""
     directory = Path(directory)
     projects = []
-    for sub in sorted(directory.iterdir()):
+    for sub in tqdm(sorted(directory.iterdir()), desc="finding latex projects", unit="project"):
         if sub.is_dir():
             try:
                 compiler.find_root(sub)
