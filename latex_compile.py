@@ -81,6 +81,11 @@ class LatexCompiler:
         the PDF with no error to flag it.
         """
         subprocess.run(
+            ["latexmk", "-C", f"-outdir={root.parent}", root.name],
+            cwd=root.parent, check=True, capture_output=True, timeout=self.timeout,
+        )
+
+        subprocess.run(
             ["latexmk", "-pdf", "-interaction=nonstopmode", "-halt-on-error", f"-outdir={root.parent}", root.name],
             cwd=root.parent, check=True, capture_output=True, timeout=self.timeout,
         )
@@ -89,6 +94,11 @@ class LatexCompiler:
         project_dir = Path(project_dir).resolve()
         root = self.find_root(project_dir)
         try:
+            subprocess.run(
+                ["latexmk", "-C", f"-outdir={root.parent}", root.name],
+                cwd=root.parent, check=True, capture_output=True, timeout=self.timeout,
+            )
+
             subprocess.run(
                 # -g forces a full rebuild even if latexmk's cache thinks
                 # nothing changed; without it, a previously *failed* run
