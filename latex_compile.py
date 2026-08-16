@@ -82,11 +82,11 @@ class LatexCompiler:
         """
         subprocess.run(
             ["latexmk", "-C", f"-outdir={root.parent}", root.name],
-            cwd=root.parent, check=True, capture_output=True, timeout=self.timeout,
+            cwd=root.parent, capture_output=True, timeout=self.timeout,
         )
 
         subprocess.run(
-            ["latexmk", "-pdf", "-interaction=nonstopmode", "-halt-on-error", f"-outdir={root.parent}", root.name],
+            ["latexmk", "-g", "-pdf", "-interaction=nonstopmode", "-halt-on-error", f"-outdir={root.parent}", root.name],
             cwd=root.parent, check=True, capture_output=True, timeout=self.timeout,
         )
 
@@ -96,7 +96,7 @@ class LatexCompiler:
         try:
             subprocess.run(
                 ["latexmk", "-C", f"-outdir={root.parent}", root.name],
-                cwd=root.parent, check=True, capture_output=True, timeout=self.timeout,
+                cwd=root.parent, capture_output=True, timeout=self.timeout,
             )
 
             subprocess.run(
