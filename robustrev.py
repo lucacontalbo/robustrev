@@ -176,7 +176,7 @@ def perturb(args):
 
                 try:
                     changed = perturber.apply_one(out_dir, pert_id, baseline_review)
-                except NotImplementedError as e:
+                except Exception as e:
                     changed = str(e)
 
                 if changed is True:
