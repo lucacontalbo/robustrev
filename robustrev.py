@@ -139,7 +139,7 @@ def perturb(args):
         if wanted - have:
             raise ValueError(f"unknown paper(s) {sorted(wanted - have)} in {PAPERS_DIR}; choices are {sorted(have)}")
         projects = [p for p in projects if p.name in wanted]
-        projects = projects[640:] # TODO: remove this line when done testing
+        # projects = projects[640:] # TODO: remove this line when done testing
 
     pert_ids = args.perturbations or list(perturber.perturbations)
     unknown = set(pert_ids) - set(perturber.perturbations)
