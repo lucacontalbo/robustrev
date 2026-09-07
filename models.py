@@ -46,6 +46,7 @@ _REASONING_RE = re.compile(r"^(gpt-5|o1|o3|o4)")
 # (gpt-4o and later). o-series support varies by variant, so it's left off
 # this allowlist by default.
 _PDF_CAPABLE_RE = re.compile(r"^(gpt-4o|gpt-4\.1|gpt-4\.5|gpt-5)")
+_DISABLE_THINKING_MODELS = re.compile(r"qwen3\.5", re.IGNORECASE)
 
 
 class OpenAIModel:
@@ -70,6 +71,11 @@ class OpenAIModel:
             messages=[{"role": "user", "content": content}],
             # max_tokens=max_tokens,
             temperature=0 if not _REASONING_RE.match(self.model) else 1,
+            extra_body={} if not _DISABLE_THINKING_MODELS.search(self.model) else {
+                "chat_template_kwargs": {
+                    "enable_thinking": False
+                }
+            },
             **{token_kwarg: max_tokens},
         )
         return resp.choices[0].message.content
