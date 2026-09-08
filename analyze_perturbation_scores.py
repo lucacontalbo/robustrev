@@ -26,6 +26,7 @@ import argparse
 import csv
 import json
 import statistics as stats
+import sys
 from pathlib import Path
 
 import yaml
@@ -86,19 +87,28 @@ def bin_for(score, bins):
     return None
 
 
-def discover_baseline(baseline_root):
-    """paper dirs are baseline_root/<venue>/<model>/<paper_id>."""
+def available_models(baseline_root):
+    """Distinct <model> path components under baseline_root/<venue>/<model>/<paper_id>."""
+    models = set()
+    for paper_dir in baseline_root.glob("*/*/*"):
+        if paper_dir.is_dir():
+            models.add(paper_dir.parts[-2])
+    return sorted(models)
+
+
+def discover_baseline(baseline_root, model):
+    """paper dirs are baseline_root/<venue>/<model>/<paper_id>, restricted to `model`."""
     reviews = {}  # (venue, model, paper_id) -> review dict
     skipped = 0
-    for paper_dir in sorted(baseline_root.glob("*/*/*")):
+    for paper_dir in sorted(baseline_root.glob(f"*/{model}/*")):
         if not paper_dir.is_dir():
             continue
-        venue, model, paper_id = paper_dir.parts[-3:]
+        venue, m, paper_id = paper_dir.parts[-3:]
         review = load_review(paper_dir)
         if review is None:
             skipped += 1
             continue
-        reviews[(venue, model, paper_id)] = review
+        reviews[(venue, m, paper_id)] = review
     return reviews, skipped
 
 
@@ -212,10 +222,11 @@ def fmt(x, width=7, prec=3):
     return f"{x:{width}.{prec}f}" if isinstance(x, float) else f"{x:{width}}"
 
 
-def print_report(by_pert_attr, by_pert_attr_bin, bins, baseline_skipped, per_pert_skipped, n_baseline):
+def print_report(by_pert_attr, by_pert_attr_bin, bins, baseline_skipped, per_pert_skipped, n_baseline, model):
     print("=" * 100)
     print("PERTURBATION SCORE-CHANGE ANALYSIS")
     print("=" * 100)
+    print(f"Model: {model}")
     print(f"Original reviews usable: {n_baseline} (skipped, no usable review: {baseline_skipped})\n")
 
     for pert in sorted(by_pert_attr):
@@ -250,8 +261,9 @@ def print_report(by_pert_attr, by_pert_attr_bin, bins, baseline_skipped, per_per
         print()
 
 
-def write_json(path, by_pert_attr, by_pert_attr_bin, bins, baseline_skipped, per_pert_skipped, n_baseline):
+def write_json(path, by_pert_attr, by_pert_attr_bin, bins, baseline_skipped, per_pert_skipped, n_baseline, model):
     payload = {
+        "model": model,
         "n_baseline_reviews": n_baseline,
         "baseline_skipped": baseline_skipped,
         "bins": [{"label": l, "lo": lo, "hi": hi} for l, lo, hi in bins],
@@ -273,6 +285,10 @@ def write_raw_csv(path, records):
 def main():
     parser = argparse.ArgumentParser(description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter)
     parser.add_argument("--tests-dir", type=Path, default=TESTS_DIR, help="directory containing reviews*/ folders")
+    parser.add_argument("--model", type=str, default=None,
+                         help="only aggregate reviews for this model (the <model> path component "
+                              "under tests/reviews/<venue>/<model>/<paper_id>); if omitted and "
+                              "multiple models are present, you will be prompted to pick one")
     parser.add_argument("--output", type=Path, default=None, help="write full aggregate stats as JSON here")
     parser.add_argument("--raw-csv", type=Path, default=None, help="write every individual (paper, attribute) delta as CSV here")
     parser.add_argument("--quiet", action="store_true", help="skip the console report")
@@ -282,7 +298,31 @@ def main():
     if not baseline_root.is_dir():
         parser.error(f"baseline directory not found: {baseline_root}")
 
-    baseline_reviews, baseline_skipped = discover_baseline(baseline_root)
+    models = available_models(baseline_root)
+    if not models:
+        parser.error(f"no <venue>/<model>/<paper_id> reviews found under {baseline_root}")
+
+    if args.model is not None:
+        if args.model not in models:
+            parser.error(f"model {args.model!r} not found under {baseline_root}; "
+                         f"available models: {', '.join(models)}")
+    elif len(models) == 1:
+        args.model = models[0]
+    elif sys.stdin.isatty():
+        print("Multiple models found under baseline reviews:")
+        for i, m in enumerate(models, 1):
+            print(f"  {i}. {m}")
+        choice = input("Select a model to aggregate (number or name): ").strip()
+        if choice.isdigit() and 1 <= int(choice) <= len(models):
+            args.model = models[int(choice) - 1]
+        elif choice in models:
+            args.model = choice
+        else:
+            parser.error(f"invalid selection: {choice!r}")
+    else:
+        parser.error(f"multiple models found ({', '.join(models)}); specify one with --model")
+
+    baseline_reviews, baseline_skipped = discover_baseline(baseline_root, args.model)
 
     perturbation_dirs = sorted(
         d for d in args.tests_dir.glob(f"{BASELINE_DIR_NAME}_*") if d.is_dir()
@@ -296,10 +336,12 @@ def main():
     by_pert_attr, by_pert_attr_bin = aggregate(records, DEFAULT_BINS)
 
     if not args.quiet:
-        print_report(by_pert_attr, by_pert_attr_bin, DEFAULT_BINS, baseline_skipped, per_pert_skipped, len(baseline_reviews))
+        print_report(by_pert_attr, by_pert_attr_bin, DEFAULT_BINS, baseline_skipped, per_pert_skipped,
+                     len(baseline_reviews), args.model)
 
     if args.output:
-        write_json(args.output, by_pert_attr, by_pert_attr_bin, DEFAULT_BINS, baseline_skipped, per_pert_skipped, len(baseline_reviews))
+        write_json(args.output, by_pert_attr, by_pert_attr_bin, DEFAULT_BINS, baseline_skipped, per_pert_skipped,
+                   len(baseline_reviews), args.model)
         print(f"Wrote aggregate stats to {args.output}")
 
     if args.raw_csv:

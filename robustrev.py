@@ -99,7 +99,7 @@ def review(args):
     else:
         jobs = [(p, p.name, perturbation_name(p)) for p in find_projects(directory, compiler)]
 
-    jobs = jobs[7890:] # TODO: remove this line when done testing
+    #jobs = jobs[7890:] # TODO: remove this line when done testing
     bar = tqdm(jobs, desc="reviewing", unit="paper")
     for project_dir, paper_name, pert_name in bar:
         base_dir = OUTPUT_DIR if pert_name is None else OUTPUT_DIR.parent / f"{OUTPUT_DIR.name}_{pert_name}"
@@ -171,7 +171,7 @@ def perturb(args):
             inner = tqdm(pert_ids, desc=project_dir.name, unit="perturbation", leave=False)
             for pert_id in inner:
                 inner.set_postfix_str(pert_id)
-                out_dir = PERTURBED_DIR / project_dir.name / pert_id
+                out_dir = PERTURBED_DIR / args.model_id / project_dir.name / pert_id
                 if out_dir.exists():
                     shutil.rmtree(out_dir)
                 shutil.copytree(project_dir, out_dir)
