@@ -156,7 +156,8 @@ def log_attempt(arxiv_id, outcome, detail=""):
 
 # -- main scrape loop -------------------------------------------------------
 
-def scrape(target, categories, start_year, page_size, api_delay, download_delay, compile_timeout):
+def scrape(target, categories, start_year, page_size, api_delay, download_delay, compile_timeout,
+           primary_category_only=False):
     OUTPUT_DIR.mkdir(exist_ok=True)
     state = load_state(target)
     search_query = build_search_query(categories, start_year)
@@ -187,6 +188,17 @@ def scrape(target, categories, start_year, page_size, api_delay, download_delay,
                 # arxiv_id is ever downloaded/compiled/counted twice.
                 continue
             state["attempted_ids"].add(arxiv_id)
+
+            # `cat:` in the arXiv query matches *any* listed category, so a
+            # paper only cross-listed under e.g. cs.CL (primarily an RL or
+            # CV paper that mentions language in passing) still shows up.
+            # --primary-category-only tightens that to "this is actually
+            # what the paper is about" by requiring the *primary* category
+            # to be one of the requested ones.
+            if primary_category_only and entry["primary_category"] not in categories:
+                log_attempt(arxiv_id, "primary_category_mismatch", entry["primary_category"] or "")
+                save_state(state)
+                continue
 
             # Same paper resubmitted under a *different* arxiv_id (rarer,
             # but happens) — catch it by title before spending a download
@@ -258,6 +270,9 @@ def main():
     parser = argparse.ArgumentParser(description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter)
     parser.add_argument("--target", type=int, default=1000, help="number of eligible papers to collect (default: 1000)")
     parser.add_argument("--categories", nargs="+", default=DEFAULT_CATEGORIES, help="arXiv categories (OR'd together)")
+    parser.add_argument("--primary-category-only", action="store_true",
+                         help="only accept papers whose *primary* arXiv category is one of --categories "
+                              "(default accepts any paper cross-listed under one of them too)")
     parser.add_argument("--start-year", type=int, default=2025, help="only papers submitted from this year onward")
     parser.add_argument("--page-size", type=int, default=100, help="arXiv API results per page (max 100)")
     parser.add_argument("--api-delay", type=float, default=3.0, help="seconds to sleep between arXiv API calls")
@@ -268,7 +283,7 @@ def main():
     scrape(
         target=args.target, categories=args.categories, start_year=args.start_year,
         page_size=args.page_size, api_delay=args.api_delay, download_delay=args.download_delay,
-        compile_timeout=args.compile_timeout,
+        compile_timeout=args.compile_timeout, primary_category_only=args.primary_category_only,
     )
 
 
