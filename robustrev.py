@@ -13,13 +13,13 @@ from latex_compile import LatexCompiler
 from perturber import Perturber
 from reviewer import Reviewer
 
-from phoenix.otel import register
+"""from phoenix.otel import register
 
 tracer_provider = register(
     auto_instrument=True,
     batch=True,
     project_name="robustrev",
-)
+)"""
 
 CONFIG_PATH = Path(__file__).parent / "models_config.yaml"
 OUTPUT_DIR = Path(__file__).parent / "tests" / "reviews"
@@ -140,7 +140,8 @@ def perturb(args):
         if wanted - have:
             raise ValueError(f"unknown paper(s) {sorted(wanted - have)} in {PAPERS_DIR}; choices are {sorted(have)}")
         projects = [p for p in projects if p.name in wanted]
-        # projects = projects[640:] # TODO: remove this line when done testing
+
+    #projects = projects[640:] # TODO: remove this line when done testing
 
     pert_ids = args.perturbations or list(perturber.perturbations)
     unknown = set(pert_ids) - set(perturber.perturbations)
