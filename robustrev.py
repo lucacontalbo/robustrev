@@ -1,6 +1,8 @@
 import argparse
+import contextlib
 import json
 import shutil
+import tempfile
 import traceback
 from pathlib import Path
 from dotenv import load_dotenv
@@ -89,6 +91,28 @@ def find_perturbed_projects(directory):
                 yield pert_dir, paper_dir.name, pert_dir.name
 
 
+@contextlib.contextmanager
+def isolated_compile(compiler, project_dir):
+    """Compile `project_dir` in a private scratch copy rather than in place.
+
+    LatexCompiler builds inside the project directory itself (required so
+    bibtex's cwd-relative .aux/.bbl output matches pdflatex's -outdir; see
+    latex_compile.py), and starts every build with `latexmk -C` (a full
+    clean). Two review/perturb processes compiling the *same* shared
+    papers/ or scraped_papers/ project concurrently (e.g. one process per
+    model, on a shared cluster filesystem) can then race: one process's
+    clean step deletes the PDF another process just finished building,
+    right before it's copied or read out — surfacing as a FileNotFoundError
+    on a file that existed a moment earlier. Isolating each compile into
+    its own throwaway copy makes concurrent compiles of the same source
+    project fully independent, at the cost of one extra copytree per call
+    (negligible next to the model call that follows)."""
+    with tempfile.TemporaryDirectory(prefix="robustrev_compile_") as tmp:
+        work_dir = Path(tmp) / project_dir.name
+        shutil.copytree(project_dir, work_dir)
+        yield compiler.compile_pdf(work_dir)
+
+
 def review(args):
     cfg = load_model(args.model_id)
     compiler = LatexCompiler()
@@ -107,24 +131,35 @@ def review(args):
         label = f"{paper_name}/{pert_name}" if pert_name else paper_name
         bar.set_postfix_str(label)
 
+        # Resumable: a completed review.json means this exact (paper,
+        # perturbation, model, conference) was already reviewed by a
+        # previous run — skip it instead of spending another model call.
+        # A leftover error.txt from a *failed* attempt doesn't count, so a
+        # rerun still retries those (e.g. after fixing the race condition
+        # that produced them). --force re-reviews everything regardless.
+        if not args.force and (out_dir / "review.json").exists():
+            tqdm.write(f"already reviewed, skipping {label} (pass --force to redo)")
+            continue
+
         try:
-            pdf_path = compiler.compile_pdf(project_dir)
-            result = Reviewer(
-                cfg["model_class"], cfg["model_name"], args.conference, pdf_path, **model_kwargs(cfg)
-            ).generate_review()
+            with isolated_compile(compiler, project_dir) as pdf_path:
+                result = Reviewer(
+                    cfg["model_class"], cfg["model_name"], args.conference, pdf_path, **model_kwargs(cfg)
+                ).generate_review()
+                out_dir.mkdir(parents=True, exist_ok=True)
+                shutil.copy(pdf_path, out_dir / pdf_path.name)
         except Exception:
-            # Compilation or review can fail per paper/perturbation (e.g. a
-            # perturbation broke LaTeX syntax); don't let one bad one abort
-            # the whole batch. Record the raw traceback (no model call) where
-            # the review would have gone, and move on to the next job.
+            # Compilation, review, or the copy above can fail per
+            # paper/perturbation (e.g. a perturbation broke LaTeX syntax);
+            # don't let one bad one abort the whole batch. Record the raw
+            # traceback (no model call) where the review would have gone,
+            # and move on to the next job.
             tb = traceback.format_exc()
             out_dir.mkdir(parents=True, exist_ok=True)
             (out_dir / "error.txt").write_text(tb)
             tqdm.write(f"skipped {label}: {tb.rstrip().splitlines()[-1]} (see {out_dir / 'error.txt'})")
             continue
 
-        out_dir.mkdir(parents=True, exist_ok=True)
-        shutil.copy(pdf_path, out_dir / pdf_path.name)
         (out_dir / "review.json").write_text(json.dumps(result, indent=2))
         tqdm.write(f"reviewed {label} -> {out_dir}")
 
@@ -163,11 +198,11 @@ def perturb(args):
         try:
             baseline_review = None
             if review_based:
-                pdf_path = compiler.compile_pdf(project_dir)
-                baseline_review = Reviewer(
-                    review_cfg["model_class"], review_cfg["model_name"], args.conference, pdf_path,
-                    **model_kwargs(review_cfg)
-                ).generate_review()
+                with isolated_compile(compiler, project_dir) as pdf_path:
+                    baseline_review = Reviewer(
+                        review_cfg["model_class"], review_cfg["model_name"], args.conference, pdf_path,
+                        **model_kwargs(review_cfg)
+                    ).generate_review()
 
             inner = tqdm(pert_ids, desc=project_dir.name, unit="perturbation", leave=False)
             for pert_id in inner:
@@ -200,6 +235,9 @@ def main():
     p_review.add_argument("model_id", help="model_id from models_config.yaml")
     p_review.add_argument("conference", help="rubric to review against, e.g. iclr or acl")
     p_review.add_argument("directory", help="a LaTeX project directory, or a directory of such projects")
+    p_review.add_argument("--force", action="store_true",
+                           help="re-review papers that already have a review.json in the output "
+                                "directory (default: skip them)")
     p_review.set_defaults(func=review)
 
     p_perturb = subcommands.add_parser(
