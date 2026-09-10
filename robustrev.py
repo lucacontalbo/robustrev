@@ -12,7 +12,7 @@ import yaml
 from tqdm import tqdm
 
 from latex_compile import LatexCompiler
-from perturber import Perturber
+from perturber import Perturber, LOG_FILENAME
 from reviewer import Reviewer
 
 """from phoenix.otel import register
@@ -43,17 +43,36 @@ def model_kwargs(cfg):
     return {k: v for k, v in cfg.items() if k not in ("model_id", "model_name", "model_class")}
 
 
+def compiles(compiler, project_dir):
+    """Whether `project_dir` has a working LaTeX root, checked without
+    touching the project in place. compiler.find_root() trial-compiles
+    candidates *inside* the directory it's given (latexmk -C then a build,
+    same as compile_pdf() — see latex_compile.py); calling it directly on a
+    shared papers/ or scraped_papers/ project would race against any other
+    process (e.g. another model's concurrent review/perturb run) doing
+    discovery or compiling over that same tree at the same time — one
+    process's clean step can delete files mid-build for another, making an
+    otherwise-fine project spuriously fail to compile. Copying into a
+    throwaway scratch dir first avoids that; unlike isolated_compile(), this
+    only needs find_root()'s trial-compile, not compile_pdf()'s extra full
+    rebuild on top of it, since the caller here just wants a yes/no."""
+    with tempfile.TemporaryDirectory(prefix="robustrev_discover_") as tmp:
+        work_dir = Path(tmp) / project_dir.name
+        shutil.copytree(project_dir, work_dir)
+        try:
+            compiler.find_root(work_dir)
+            return True
+        except FileNotFoundError:
+            return False
+
+
 def find_projects(directory, compiler):
     """A `directory` is either one LaTeX project itself, or a directory of them."""
     directory = Path(directory)
-    projects = []
-    for sub in tqdm(sorted(directory.iterdir()), desc="finding latex projects", unit="project"):
-        if sub.is_dir():
-            try:
-                compiler.find_root(sub)
-                projects.append(sub)
-            except FileNotFoundError:
-                pass
+    projects = [
+        sub for sub in tqdm(sorted(directory.iterdir()), desc="finding latex projects", unit="project")
+        if sub.is_dir() and compiles(compiler, sub)
+    ]
     if projects:
         return projects
     compiler.find_root(directory)  # raises FileNotFoundError if not a project either
@@ -195,16 +214,37 @@ def perturb(args):
     outer = tqdm(projects, desc="perturbing", unit="paper")
     for project_dir in outer:
         outer.set_postfix_str(project_dir.name)
+
+        # Resumable: apply_one() writes LOG_FILENAME into out_dir on every
+        # successful perturbation, and the inner loop below rmtree's out_dir
+        # again on any failure/no-op (see the `else` branch) — so out_dir
+        # containing LOG_FILENAME is exactly "this (paper, perturbation,
+        # model) already succeeded in a previous run." Skip those instead
+        # of re-spending a model call on them.
+        pending_pert_ids = [
+            pid for pid in pert_ids
+            if not (PERTURBED_DIR / args.model_id / project_dir.name / pid / LOG_FILENAME).exists()
+        ]
+        if not pending_pert_ids:
+            tqdm.write(f"already perturbed, skipping {project_dir.name} (all of {pert_ids})")
+            continue
+
         try:
             baseline_review = None
-            if review_based:
+            # Only fetch the baseline review if a still-pending perturbation
+            # actually needs it — no point spending that model call on a
+            # paper whose review-based perturbations are already done.
+            review_based_pending = review_based and [
+                pid for pid in pending_pert_ids if perturber.perturbations[pid]["mechanism"] == "review_based"
+            ]
+            if review_based_pending:
                 with isolated_compile(compiler, project_dir) as pdf_path:
                     baseline_review = Reviewer(
                         review_cfg["model_class"], review_cfg["model_name"], args.conference, pdf_path,
                         **model_kwargs(review_cfg)
                     ).generate_review()
 
-            inner = tqdm(pert_ids, desc=project_dir.name, unit="perturbation", leave=False)
+            inner = tqdm(pending_pert_ids, desc=project_dir.name, unit="perturbation", leave=False)
             for pert_id in inner:
                 inner.set_postfix_str(pert_id)
                 out_dir = PERTURBED_DIR / args.model_id / project_dir.name / pert_id
