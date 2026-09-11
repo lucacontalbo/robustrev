@@ -79,35 +79,35 @@ def find_projects(directory, compiler):
     return [directory]
 
 
-def perturbation_name(project_dir):
-    """If `project_dir` sits under perturbed_papers/<paper>/<perturbation_id>/,
-    return <perturbation_id>; else None. Based on path position (2 levels
-    below PERTURBED_DIR), not on project_dir's own name, so it works whether
-    `review` was pointed at one specific perturbed_papers/<paper>/<pert_id>/
-    directory or at perturbed_papers/<paper>/ as a whole (each perturbation
-    subdirectory then becomes its own "project" via find_projects())."""
-    parts = Path(project_dir).resolve().parts
-    if PERTURBED_DIR.name in parts:
-        idx = parts.index(PERTURBED_DIR.name)
-        if len(parts) > idx + 2:
-            return parts[idx + 2]
-    return None
-
-
 def find_perturbed_projects(directory):
-    """Walk `directory` (perturbed_papers/) as <paper>/<perturbation_id>/ two
-    levels deep, yielding (project_dir, paper_name, perturbation_id) for each
-    perturbation variant. Needed because find_projects() only looks one level
-    deep: pointed at perturbed_papers/<paper>/, it would find *some*
-    compilable root somewhere in that whole multi-perturbation subtree and
-    treat the paper dir as a single project, silently ignoring the rest."""
-    directory = Path(directory)
-    for paper_dir in sorted(directory.iterdir()):
-        if not paper_dir.is_dir():
+    """Walk `directory` down to perturbed_papers/<perturbing_model_id>/<paper>/
+    <perturbation_id>/ leaves -- exactly what perturb() writes (see its
+    out_dir) -- yielding (project_dir, paper_name, perturbation_id) for each
+    perturbation variant found under it. `directory` can be anchored at any
+    level of that layout: PERTURBED_DIR itself (walk every model), one
+    perturbing model's subtree (PERTURBED_DIR/<model_id>/, e.g. one Slurm
+    array task reviewing only the perturbations it generated), a single
+    paper's subtree, or a single perturbation-variant leaf directly. The
+    right number of levels to descend is computed from `directory`'s own
+    position under PERTURBED_DIR, not assumed fixed, so all of those work
+    without the caller having to say which.
+
+    Needed because find_projects() only looks one level deep: pointed
+    anywhere in this tree, it would find *some* compilable root somewhere in
+    the whole multi-perturbation subtree via its recursive rglob and treat
+    that as a single project, silently reviewing just one arbitrary
+    perturbation variant per paper under a made-up label instead of every
+    one under its real perturbation_id."""
+    directory = Path(directory).resolve()
+    root = PERTURBED_DIR.resolve()
+    depth_here = 0 if directory == root else len(directory.relative_to(root).parts)
+    remaining = max(0, 3 - depth_here)  # levels left to reach <model>/<paper>/<pert>
+    candidates = [directory] if remaining == 0 else sorted(directory.glob("/".join(["*"] * remaining)))
+    for project_dir in candidates:
+        if not project_dir.is_dir():
             continue
-        for pert_dir in sorted(paper_dir.iterdir()):
-            if pert_dir.is_dir():
-                yield pert_dir, paper_dir.name, pert_dir.name
+        perturbing_model_id, paper_name, pert_id = project_dir.relative_to(root).parts
+        yield project_dir, paper_name, pert_id, perturbing_model_id
 
 
 @contextlib.contextmanager
@@ -137,16 +137,28 @@ def review(args):
     compiler = LatexCompiler()
 
     directory = Path(args.directory).resolve()
-    if directory == PERTURBED_DIR.resolve():
+    perturbed_root = PERTURBED_DIR.resolve()
+    if directory == perturbed_root or perturbed_root in directory.parents:
         jobs = list(find_perturbed_projects(directory))
     else:
-        jobs = [(p, p.name, perturbation_name(p)) for p in find_projects(directory, compiler)]
+        jobs = [(p, p.name, None, None) for p in find_projects(directory, compiler)]
 
     #jobs = jobs[7890:] # TODO: remove this line when done testing
     bar = tqdm(jobs, desc="reviewing", unit="paper")
-    for project_dir, paper_name, pert_name in bar:
-        base_dir = OUTPUT_DIR if pert_name is None else OUTPUT_DIR.parent / f"{OUTPUT_DIR.name}_{pert_name}"
-        out_dir = base_dir / args.conference / args.model_id / paper_name
+    for project_dir, paper_name, pert_name, perturbing_model_id in bar:
+        if pert_name is None:
+            base_dir, model_path = OUTPUT_DIR, args.model_id
+        else:
+            # Two model names in the path: the one whose perturbed text
+            # we're reviewing (perturbing_model_id, from the
+            # perturbed_papers/<model>/ directory this job came from) and
+            # the one doing the reviewing (args.model_id) — so reviewing
+            # the same perturbed corpus with different models never
+            # collides, and neither does perturbing with different models
+            # then reviewing all of them with one reviewer model.
+            base_dir = OUTPUT_DIR.parent / f"{OUTPUT_DIR.name}_{pert_name}"
+            model_path = Path(perturbing_model_id) / args.model_id
+        out_dir = base_dir / args.conference / model_path / paper_name
         label = f"{paper_name}/{pert_name}" if pert_name else paper_name
         bar.set_postfix_str(label)
 
