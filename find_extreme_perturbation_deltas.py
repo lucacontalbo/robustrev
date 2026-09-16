@@ -17,7 +17,6 @@ Usage:
 
 import argparse
 import json
-import sys
 from pathlib import Path
 
 from analyze_perturbation_scores import (
@@ -25,18 +24,20 @@ from analyze_perturbation_scores import (
     OVERALL_FIELD,
     TESTS_DIR,
     available_models,
+    available_perturbing_models,
     discover_baseline,
     is_number,
     load_review,
+    resolve_model_choice,
 )
 
 SUMMARY_FIELD = "paper_summary"
 SUMMARY_EXCERPT_LEN = 200
 
 
-def collect_attribute_deltas(baseline_reviews, perturbation_dirs, attribute):
+def collect_attribute_deltas(baseline_reviews, perturbation_dirs, attribute, perturbing_model):
     """Return {perturbation: [record, ...]} for every usable (base, pert) pair,
-    where record = {venue, model, paper_id, base, pert, delta, summary}."""
+    where record = {venue, model, perturbing_model, paper_id, base, pert, delta, summary}."""
     by_pert = {}
     for pert_dir in perturbation_dirs:
         pert_name = pert_dir.name[len(f"{BASELINE_DIR_NAME}_"):]
@@ -45,7 +46,7 @@ def collect_attribute_deltas(baseline_reviews, perturbation_dirs, attribute):
             base_val = base_review.get(attribute)
             if not is_number(base_val):
                 continue
-            pert_review = load_review(pert_dir / venue / model / paper_id)
+            pert_review = load_review(pert_dir / venue / perturbing_model / model / paper_id)
             if pert_review is None:
                 continue
             pert_val = pert_review.get(attribute)
@@ -57,6 +58,7 @@ def collect_attribute_deltas(baseline_reviews, perturbation_dirs, attribute):
                 "perturbation": pert_name,
                 "venue": venue,
                 "model": model,
+                "perturbing_model": perturbing_model,
                 "paper_id": paper_id,
                 "base": base_val,
                 "pert": pert_val,
@@ -79,7 +81,7 @@ def top_extremes(records, top_n):
 
 
 def fmt_record(r):
-    return (f"{r['paper_id']} ({r['venue']}/{r['model']})  "
+    return (f"{r['paper_id']} ({r['venue']}, perturbed by {r['perturbing_model']}, reviewed by {r['model']})  "
             f"{r['base']:g} -> {r['pert']:g}  (delta={r['delta']:+g})")
 
 
@@ -133,9 +135,18 @@ def main():
     parser = argparse.ArgumentParser(description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter)
     parser.add_argument("--tests-dir", type=Path, default=TESTS_DIR, help="directory containing reviews*/ folders")
     parser.add_argument("--model", type=str, default=None,
-                         help="only consider reviews for this model (the <model> path component "
-                              "under tests/reviews/<venue>/<model>/<paper_id>); if omitted and "
-                              "multiple models are present, you will be prompted to pick one")
+                         help="only consider reviews written by this reviewing model (the <model> "
+                              "path component under tests/reviews/<venue>/<model>/<paper_id>, and the "
+                              "second/<reviewing_model> component under tests/reviews_<perturbation>/"
+                              "<venue>/<perturbing_model>/<reviewing_model>/<paper_id>); if omitted "
+                              "and multiple models are present, you will be prompted to pick one")
+    parser.add_argument("--perturbing-model", type=str, default=None,
+                         help="only consider perturbed reviews whose LaTeX was perturbed by this "
+                              "model (the <perturbing_model> path component under tests/reviews_"
+                              "<perturbation>/<venue>/<perturbing_model>/<reviewing_model>/<paper_id>); "
+                              "if omitted, defaults to --model (a model reviewing its own "
+                              "perturbations, the common case) when that's available, else you'll "
+                              "be prompted")
     parser.add_argument("--attribute", type=str, default=OVERALL_FIELD,
                          help=f"score field to rank deltas on (default: {OVERALL_FIELD})")
     parser.add_argument("--top", type=int, default=1, help="how many extreme samples to show per side (default: 1)")
@@ -150,26 +161,7 @@ def main():
     models = available_models(baseline_root)
     if not models:
         parser.error(f"no <venue>/<model>/<paper_id> reviews found under {baseline_root}")
-
-    if args.model is not None:
-        if args.model not in models:
-            parser.error(f"model {args.model!r} not found under {baseline_root}; "
-                         f"available models: {', '.join(models)}")
-    elif len(models) == 1:
-        args.model = models[0]
-    elif sys.stdin.isatty():
-        print("Multiple models found under baseline reviews:")
-        for i, m in enumerate(models, 1):
-            print(f"  {i}. {m}")
-        choice = input("Select a model to aggregate (number or name): ").strip()
-        if choice.isdigit() and 1 <= int(choice) <= len(models):
-            args.model = models[int(choice) - 1]
-        elif choice in models:
-            args.model = choice
-        else:
-            parser.error(f"invalid selection: {choice!r}")
-    else:
-        parser.error(f"multiple models found ({', '.join(models)}); specify one with --model")
+    args.model = resolve_model_choice(parser, args.model, models, "reviewing model", "--model")
 
     baseline_reviews, baseline_skipped = discover_baseline(baseline_root, args.model)
 
@@ -179,7 +171,20 @@ def main():
     if not perturbation_dirs:
         parser.error(f"no {BASELINE_DIR_NAME}_* perturbation directories found under {args.tests_dir}")
 
-    by_pert = collect_attribute_deltas(baseline_reviews, perturbation_dirs, args.attribute)
+    perturbing_models = available_perturbing_models(args.tests_dir, args.model)
+    if not perturbing_models:
+        parser.error(f"no perturbed reviews found for reviewing model {args.model!r} under {args.tests_dir}")
+    if args.perturbing_model is None and args.model in perturbing_models:
+        # Default: a model reviewing its own perturbations (the common
+        # case). Only falls through to resolve_model_choice() below when
+        # that's not available.
+        args.perturbing_model = args.model
+    else:
+        args.perturbing_model = resolve_model_choice(
+            parser, args.perturbing_model, perturbing_models, "perturbing model", "--perturbing-model"
+        )
+
+    by_pert = collect_attribute_deltas(baseline_reviews, perturbation_dirs, args.attribute, args.perturbing_model)
 
     if not args.quiet:
         print_report(by_pert, args.attribute, args.top)

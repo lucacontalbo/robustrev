@@ -1,9 +1,17 @@
 """Aggregate statistics on how perturbations move review scores.
 
-Layout this script expects (see tests/):
+Layout this script expects (see tests/, and robustrev.py's review()):
 
-    tests/reviews/<venue>/<model>/<paper_id>/review.json      # original review
-    tests/reviews_<perturbation>/<venue>/<model>/<paper_id>/review.json
+    tests/reviews/<venue>/<reviewing_model>/<paper_id>/review.json
+    tests/reviews_<perturbation>/<venue>/<perturbing_model>/<reviewing_model>/<paper_id>/review.json
+
+Perturbed reviews carry *two* model names: <perturbing_model> is whichever
+model's perturbed_papers/<model>/ the LaTeX came from, <reviewing_model> is
+the model that actually wrote the review — so reviewing the same perturbed
+corpus with several reviewer models, or perturbing with several models and
+reviewing all of them with one reviewer, never collide. The baseline corpus
+under tests/reviews/ has no such split — there's only ever one model
+involved, the one that reviewed the original paper.
 
 A paper directory that has no usable review (missing review.json, an
 error.txt instead, or unparsable JSON) is skipped. A perturbation is skipped
@@ -87,12 +95,57 @@ def bin_for(score, bins):
     return None
 
 
+def resolve_model_choice(parser, given, options, label, flag):
+    """Validate `given` against `options`, or resolve it: the sole option if
+    there's only one, an interactive prompt on a TTY, else a hard error
+    naming `flag` as the fix. `label` names the choice in messages (e.g.
+    "reviewing model", "perturbing model"). Shared by --model and
+    --perturbing-model below, which both need this same
+    validate-or-single-or-prompt-or-error resolution."""
+    if given is not None:
+        if given not in options:
+            parser.error(f"{label} {given!r} not found; available: {', '.join(options)}")
+        return given
+    if len(options) == 1:
+        return options[0]
+    if sys.stdin.isatty():
+        print(f"Multiple {label}s found:")
+        for i, o in enumerate(options, 1):
+            print(f"  {i}. {o}")
+        choice = input(f"Select a {label} (number or name): ").strip()
+        if choice.isdigit() and 1 <= int(choice) <= len(options):
+            return options[int(choice) - 1]
+        if choice in options:
+            return choice
+        parser.error(f"invalid selection: {choice!r}")
+    parser.error(f"multiple {label}s found ({', '.join(options)}); specify one with {flag}")
+
+
 def available_models(baseline_root):
     """Distinct <model> path components under baseline_root/<venue>/<model>/<paper_id>."""
     models = set()
     for paper_dir in baseline_root.glob("*/*/*"):
         if paper_dir.is_dir():
             models.add(paper_dir.parts[-2])
+    return sorted(models)
+
+
+def available_perturbing_models(tests_dir, reviewing_model):
+    """Distinct <perturbing_model> path components under
+    tests_dir/reviews_*/<venue>/<perturbing_model>/<reviewing_model>/<paper_id>,
+    restricted to the given <reviewing_model> — i.e. every model whose
+    perturbed text was actually reviewed *by that reviewer*, which is what
+    collect_deltas() below needs to find a usable pair."""
+    models = set()
+    for pert_dir in tests_dir.glob(f"{BASELINE_DIR_NAME}_*"):
+        if not pert_dir.is_dir():
+            continue
+        for paper_dir in pert_dir.glob("*/*/*/*"):
+            if not paper_dir.is_dir():
+                continue
+            _venue, perturbing_model, reviewing_m, _paper_id = paper_dir.parts[-4:]
+            if reviewing_m == reviewing_model:
+                models.add(perturbing_model)
     return sorted(models)
 
 
@@ -112,9 +165,9 @@ def discover_baseline(baseline_root, model):
     return reviews, skipped
 
 
-def collect_deltas(baseline_reviews, perturbation_dirs, score_fields_cache):
+def collect_deltas(baseline_reviews, perturbation_dirs, score_fields_cache, perturbing_model):
     """Return a list of delta records:
-    {perturbation, venue, model, paper_id, attribute, base, pert, delta, base_overall}
+    {perturbation, venue, model, perturbing_model, paper_id, attribute, base, pert, delta, base_overall}
     """
     records = []
     per_perturbation_skipped = {}
@@ -123,7 +176,7 @@ def collect_deltas(baseline_reviews, perturbation_dirs, score_fields_cache):
         pert_name = pert_dir.name[len(f"{BASELINE_DIR_NAME}_"):]
         skipped = 0
         for (venue, model, paper_id), base_review in baseline_reviews.items():
-            paper_dir = pert_dir / venue / model / paper_id
+            paper_dir = pert_dir / venue / perturbing_model / model / paper_id
             pert_review = load_review(paper_dir)
             if pert_review is None:
                 skipped += 1
@@ -149,6 +202,7 @@ def collect_deltas(baseline_reviews, perturbation_dirs, score_fields_cache):
                     "perturbation": pert_name,
                     "venue": venue,
                     "model": model,
+                    "perturbing_model": perturbing_model,
                     "paper_id": paper_id,
                     "attribute": attr,
                     "base": base_val,
@@ -222,11 +276,13 @@ def fmt(x, width=7, prec=3):
     return f"{x:{width}.{prec}f}" if isinstance(x, float) else f"{x:{width}}"
 
 
-def print_report(by_pert_attr, by_pert_attr_bin, bins, baseline_skipped, per_pert_skipped, n_baseline, model):
+def print_report(by_pert_attr, by_pert_attr_bin, bins, baseline_skipped, per_pert_skipped, n_baseline,
+                  model, perturbing_model):
     print("=" * 100)
     print("PERTURBATION SCORE-CHANGE ANALYSIS")
     print("=" * 100)
-    print(f"Model: {model}")
+    print(f"Reviewing model: {model}")
+    print(f"Perturbing model: {perturbing_model}")
     print(f"Original reviews usable: {n_baseline} (skipped, no usable review: {baseline_skipped})\n")
 
     for pert in sorted(by_pert_attr):
@@ -261,9 +317,11 @@ def print_report(by_pert_attr, by_pert_attr_bin, bins, baseline_skipped, per_per
         print()
 
 
-def write_json(path, by_pert_attr, by_pert_attr_bin, bins, baseline_skipped, per_pert_skipped, n_baseline, model):
+def write_json(path, by_pert_attr, by_pert_attr_bin, bins, baseline_skipped, per_pert_skipped, n_baseline,
+                model, perturbing_model):
     payload = {
         "model": model,
+        "perturbing_model": perturbing_model,
         "n_baseline_reviews": n_baseline,
         "baseline_skipped": baseline_skipped,
         "bins": [{"label": l, "lo": lo, "hi": hi} for l, lo, hi in bins],
@@ -275,7 +333,8 @@ def write_json(path, by_pert_attr, by_pert_attr_bin, bins, baseline_skipped, per
 
 
 def write_raw_csv(path, records):
-    fields = ["perturbation", "venue", "model", "paper_id", "attribute", "base", "pert", "delta", "base_overall"]
+    fields = ["perturbation", "venue", "model", "perturbing_model", "paper_id", "attribute", "base", "pert",
+              "delta", "base_overall"]
     with path.open("w", newline="") as f:
         writer = csv.DictWriter(f, fieldnames=fields)
         writer.writeheader()
@@ -286,9 +345,18 @@ def main():
     parser = argparse.ArgumentParser(description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter)
     parser.add_argument("--tests-dir", type=Path, default=TESTS_DIR, help="directory containing reviews*/ folders")
     parser.add_argument("--model", type=str, default=None,
-                         help="only aggregate reviews for this model (the <model> path component "
-                              "under tests/reviews/<venue>/<model>/<paper_id>); if omitted and "
-                              "multiple models are present, you will be prompted to pick one")
+                         help="only aggregate reviews written by this reviewing model (the <model> "
+                              "path component under tests/reviews/<venue>/<model>/<paper_id>, and the "
+                              "second/<reviewing_model> component under tests/reviews_<perturbation>/"
+                              "<venue>/<perturbing_model>/<reviewing_model>/<paper_id>); if omitted "
+                              "and multiple models are present, you will be prompted to pick one")
+    parser.add_argument("--perturbing-model", type=str, default=None,
+                         help="only aggregate perturbed reviews whose LaTeX was perturbed by this "
+                              "model (the <perturbing_model> path component under tests/reviews_"
+                              "<perturbation>/<venue>/<perturbing_model>/<reviewing_model>/<paper_id> "
+                              "-- i.e. which perturbed_papers/<model>/ corpus was reviewed); if "
+                              "omitted, defaults to --model (a model reviewing its own perturbations, "
+                              "the common case) when that's available, else you'll be prompted")
     parser.add_argument("--output", type=Path, default=None, help="write full aggregate stats as JSON here")
     parser.add_argument("--raw-csv", type=Path, default=None, help="write every individual (paper, attribute) delta as CSV here")
     parser.add_argument("--quiet", action="store_true", help="skip the console report")
@@ -301,26 +369,7 @@ def main():
     models = available_models(baseline_root)
     if not models:
         parser.error(f"no <venue>/<model>/<paper_id> reviews found under {baseline_root}")
-
-    if args.model is not None:
-        if args.model not in models:
-            parser.error(f"model {args.model!r} not found under {baseline_root}; "
-                         f"available models: {', '.join(models)}")
-    elif len(models) == 1:
-        args.model = models[0]
-    elif sys.stdin.isatty():
-        print("Multiple models found under baseline reviews:")
-        for i, m in enumerate(models, 1):
-            print(f"  {i}. {m}")
-        choice = input("Select a model to aggregate (number or name): ").strip()
-        if choice.isdigit() and 1 <= int(choice) <= len(models):
-            args.model = models[int(choice) - 1]
-        elif choice in models:
-            args.model = choice
-        else:
-            parser.error(f"invalid selection: {choice!r}")
-    else:
-        parser.error(f"multiple models found ({', '.join(models)}); specify one with --model")
+    args.model = resolve_model_choice(parser, args.model, models, "reviewing model", "--model")
 
     baseline_reviews, baseline_skipped = discover_baseline(baseline_root, args.model)
 
@@ -330,18 +379,36 @@ def main():
     if not perturbation_dirs:
         parser.error(f"no {BASELINE_DIR_NAME}_* perturbation directories found under {args.tests_dir}")
 
+    perturbing_models = available_perturbing_models(args.tests_dir, args.model)
+    if not perturbing_models:
+        parser.error(f"no perturbed reviews found for reviewing model {args.model!r} under {args.tests_dir}")
+    if args.perturbing_model is None and args.model in perturbing_models:
+        # Default: a model reviewing its own perturbations (the common
+        # case -- e.g. one Slurm array task per model, each perturbing and
+        # then reviewing its own corpus). Only falls through to
+        # resolve_model_choice() below when that's not available, e.g.
+        # this reviewing model only ever reviewed *other* models' perturbed
+        # text.
+        args.perturbing_model = args.model
+    else:
+        args.perturbing_model = resolve_model_choice(
+            parser, args.perturbing_model, perturbing_models, "perturbing model", "--perturbing-model"
+        )
+
     score_fields_cache = {}
-    records, per_pert_skipped = collect_deltas(baseline_reviews, perturbation_dirs, score_fields_cache)
+    records, per_pert_skipped = collect_deltas(
+        baseline_reviews, perturbation_dirs, score_fields_cache, args.perturbing_model
+    )
 
     by_pert_attr, by_pert_attr_bin = aggregate(records, DEFAULT_BINS)
 
     if not args.quiet:
         print_report(by_pert_attr, by_pert_attr_bin, DEFAULT_BINS, baseline_skipped, per_pert_skipped,
-                     len(baseline_reviews), args.model)
+                     len(baseline_reviews), args.model, args.perturbing_model)
 
     if args.output:
         write_json(args.output, by_pert_attr, by_pert_attr_bin, DEFAULT_BINS, baseline_skipped, per_pert_skipped,
-                   len(baseline_reviews), args.model)
+                   len(baseline_reviews), args.model, args.perturbing_model)
         print(f"Wrote aggregate stats to {args.output}")
 
     if args.raw_csv:
