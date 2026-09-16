@@ -49,9 +49,9 @@ BASELINE_DIR_NAME = "reviews"
 # and exclusive on the upper bound, matching the ARR acceptance semantics:
 # <=2 "resubmit", 2.5-3.5 "findings/borderline", >=4 "conference or better".
 DEFAULT_BINS = [
-    ("low (<=2)", float("-inf"), 2.0),
-    ("mid (2.5-3.5)", 2.0, 4.0),
-    ("high (>=4)", 4.0, float("inf")),
+    ("low (<=2.5)", float("-inf"), 2.5),
+    ("mid (2.5-3.5)", 2.5, 3.5),
+    ("high (>=4)", 3.5, float("inf")),
 ]
 
 OVERALL_FIELD = "overall_assessment"
