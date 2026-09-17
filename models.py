@@ -46,7 +46,7 @@ _REASONING_RE = re.compile(r"^(gpt-5|o1|o3|o4)")
 # (gpt-4o and later). o-series support varies by variant, so it's left off
 # this allowlist by default.
 _PDF_CAPABLE_RE = re.compile(r"^(gpt-4o|gpt-4\.1|gpt-4\.5|gpt-5)")
-_DISABLE_THINKING_MODELS = re.compile(r"qwen3\.5", re.IGNORECASE)
+_DISABLE_THINKING_MODELS = re.compile(r"qwen3\.5|nemotron-3", re.IGNORECASE)
 
 
 class OpenAIModel:
