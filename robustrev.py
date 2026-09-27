@@ -174,9 +174,10 @@ def review(args):
 
         try:
             with isolated_compile(compiler, project_dir) as pdf_path:
-                result = Reviewer(
+                reviewer = Reviewer(
                     cfg["model_class"], cfg["model_name"], args.conference, pdf_path, **model_kwargs(cfg)
-                ).generate_review()
+                )
+                result = reviewer.generate_review()
                 out_dir.mkdir(parents=True, exist_ok=True)
                 shutil.copy(pdf_path, out_dir / pdf_path.name)
         except Exception:
@@ -191,6 +192,8 @@ def review(args):
             tqdm.write(f"skipped {label}: {tb.rstrip().splitlines()[-1]} (see {out_dir / 'error.txt'})")
             continue
 
+        if reviewer.raw_response is not None:
+            (out_dir / "raw_response.txt").write_text(reviewer.raw_response)
         (out_dir / "review.json").write_text(json.dumps(result, indent=2))
         tqdm.write(f"reviewed {label} -> {out_dir}")
 

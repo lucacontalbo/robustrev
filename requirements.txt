@@ -8,3 +8,4 @@ tqdm
 arize-phoenix-otel
 openinference-instrumentation-openai
 openinference-instrumentation-anthropic
+pymupdf4llm>=1.28

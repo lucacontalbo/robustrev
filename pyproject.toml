@@ -8,6 +8,7 @@ dependencies = [
     "pyyaml",
     "pypdf",
     "tqdm",
+    "pymupdf4llm>=1.28",  # PDF -> markdown input for DeepReviewer
 ]
 
 [project.scripts]

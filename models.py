@@ -3,6 +3,7 @@ import os
 import re
 from pathlib import Path
 
+import httpx
 from anthropic import Anthropic
 from openai import OpenAI
 
@@ -104,3 +105,82 @@ class VLLMModel(OpenAIModel):
 
     def supports_pdf(self):
         return self._pdf_capable
+
+
+# DeepReviewer (WestlakeNLP/DeepReviewer-7B/-14B) is fine-tuned to answer a
+# fixed system prompt per "thinking mode" with its own ICLR-style review
+# format, not an arbitrary instruction, so it gets its own entry point
+# (review()) instead of generate(). The prompts and sampling parameters are
+# copied verbatim from the authors' reference implementation:
+# https://github.com/zhu-minjun/Researcher/blob/main/ai_researcher/deep_reviewer.py
+# Total context (prompt + generation) of a DeepReviewer request; must match
+# --max-model-len in sbatch_review_deepreviewer.sh.
+DEEPREVIEWER_MAX_MODEL_LEN = 90000
+_DEEPREVIEWER_BASE_PROMPT = (
+    "You are an expert academic reviewer tasked with providing a thorough and balanced evaluation of research papers."
+)
+_DEEPREVIEWER_SIMREVIEWER_PROMPT = (
+    "When you simulate different reviewers, write the sections in this order: Summary, Soundness, Presentation, "
+    "Contribution, Strengths, Weaknesses, Suggestions, Questions, Rating and Confidence."
+)
+
+
+class DeepReviewerModel(VLLMModel):
+    """A DeepReviewer checkpoint served by vLLM.
+
+    mode:         "fast" (a single review straight away) or "standard"
+                  (simulates `reviewer_num` reviewers, self-verifies, then
+                  writes a meta-review). The paper's "Best Mode" needs an
+                  OpenScholar retrieval server and isn't supported.
+    reviewer_num: reviewers simulated in standard mode (default 3)."""
+
+    MODES = ("fast", "standard")
+
+    def __init__(self, model, mode="standard", reviewer_num=3, **kwargs):
+        super().__init__(model, **kwargs)
+        if mode not in self.MODES:
+            raise ValueError(f"unknown DeepReviewer mode {mode!r}; choices are {self.MODES}")
+        self.mode = mode
+        self.reviewer_num = reviewer_num
+
+    def system_prompt(self):
+        if self.mode == "fast":
+            return (f"{_DEEPREVIEWER_BASE_PROMPT} Your thinking mode is Fast Mode. "
+                    "In this mode, you should quickly provide the review results.")
+        return (f"{_DEEPREVIEWER_BASE_PROMPT} Your thinking mode is Standard Mode. In this mode, you should review by "
+                f"simulating {self.reviewer_num} different reviewers, and use self-verification to double-check any "
+                f"paper deficiencies identified. Finally, provide complete review results."
+                + _DEEPREVIEWER_SIMREVIEWER_PROMPT)
+
+    def _count_prompt_tokens(self, messages):
+        """Prompt length in tokens, chat template included, via vLLM's
+        /tokenize endpoint (served at the server root, not under /v1)."""
+        root = str(self.client.base_url).rstrip("/").removesuffix("/v1")
+        resp = httpx.post(
+            f"{root}/tokenize",
+            json={"model": self.model, "messages": messages, "add_generation_prompt": True},
+            headers={"Authorization": f"Bearer {self.client.api_key}"},
+            timeout=600,
+        )
+        resp.raise_for_status()
+        return resp.json()["count"]
+
+    def review(self, paper_text, max_model_len=DEEPREVIEWER_MAX_MODEL_LEN):
+        messages = [
+            {"role": "system", "content": self.system_prompt()},
+            {"role": "user", "content": paper_text},
+        ]
+        # vLLM rejects prompt + max_tokens > --max-model-len, so generation
+        # gets whatever the prompt leaves of the full context.
+        prompt_tokens = self._count_prompt_tokens(messages)
+        max_tokens = max_model_len - prompt_tokens
+        if max_tokens <= 0:
+            raise ValueError(f"paper is {prompt_tokens} tokens, which fills DeepReviewer's {max_model_len}-token context")
+        resp = self.client.chat.completions.create(
+            model=self.model,
+            messages=messages,
+            temperature=0.4,
+            top_p=0.95,
+            max_tokens=max_tokens,
+        )
+        return resp.choices[0].message.content
