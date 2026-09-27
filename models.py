@@ -107,14 +107,62 @@ class VLLMModel(OpenAIModel):
         return self._pdf_capable
 
 
-# DeepReviewer (WestlakeNLP/DeepReviewer-7B/-14B) is fine-tuned to answer a
-# fixed system prompt per "thinking mode" with its own ICLR-style review
-# format, not an arbitrary instruction, so it gets its own entry point
-# (review()) instead of generate(). The prompts and sampling parameters are
-# copied verbatim from the authors' reference implementation:
+class _NativeReviewerModel(VLLMModel):
+    """A reviewer fine-tune served by vLLM that is trained to answer a fixed
+    system prompt with its own review format, not an arbitrary instruction —
+    so it gets its own entry point (review()) instead of generate(), and
+    reviewer.py maps its native review onto our rubric.
+
+    Each request is given the model's whole context (MAX_MODEL_LEN, which
+    must match --max-model-len in its sbatch script): vLLM rejects
+    prompt + max_tokens > --max-model-len, so generation gets whatever the
+    prompt leaves."""
+
+    MAX_MODEL_LEN = None
+
+    def system_prompt(self):
+        raise NotImplementedError
+
+    def _count_prompt_tokens(self, messages):
+        """Prompt length in tokens, chat template included, via vLLM's
+        /tokenize endpoint (served at the server root, not under /v1)."""
+        root = str(self.client.base_url).rstrip("/").removesuffix("/v1")
+        resp = httpx.post(
+            f"{root}/tokenize",
+            json={"model": self.model, "messages": messages, "add_generation_prompt": True},
+            headers={"Authorization": f"Bearer {self.client.api_key}"},
+            timeout=600,
+        )
+        resp.raise_for_status()
+        return resp.json()["count"]
+
+    def review(self, paper_text, max_model_len=None):
+        max_model_len = max_model_len or self.MAX_MODEL_LEN
+        messages = [
+            {"role": "system", "content": self.system_prompt()},
+            {"role": "user", "content": paper_text},
+        ]
+        prompt_tokens = self._count_prompt_tokens(messages)
+        max_tokens = max_model_len - prompt_tokens
+        if max_tokens <= 0:
+            raise ValueError(
+                f"paper is {prompt_tokens} tokens, which fills {type(self).__name__}'s {max_model_len}-token context"
+            )
+        resp = self.client.chat.completions.create(
+            model=self.model,
+            messages=messages,
+            temperature=0.4,
+            top_p=0.95,
+            max_tokens=max_tokens,
+        )
+        return resp.choices[0].message.content
+
+
+# DeepReviewer (WestlakeNLP/DeepReviewer-7B/-14B). The prompts, sampling
+# parameters and context length are copied verbatim from the authors'
+# reference implementation:
 # https://github.com/zhu-minjun/Researcher/blob/main/ai_researcher/deep_reviewer.py
-# Total context (prompt + generation) of a DeepReviewer request; must match
-# --max-model-len in sbatch_review_deepreviewer.sh.
+# Must match --max-model-len in sbatch_review_deepreviewer.sh.
 DEEPREVIEWER_MAX_MODEL_LEN = 90000
 _DEEPREVIEWER_BASE_PROMPT = (
     "You are an expert academic reviewer tasked with providing a thorough and balanced evaluation of research papers."
@@ -125,7 +173,7 @@ _DEEPREVIEWER_SIMREVIEWER_PROMPT = (
 )
 
 
-class DeepReviewerModel(VLLMModel):
+class DeepReviewerModel(_NativeReviewerModel):
     """A DeepReviewer checkpoint served by vLLM.
 
     mode:         "fast" (a single review straight away) or "standard"
@@ -135,6 +183,7 @@ class DeepReviewerModel(VLLMModel):
     reviewer_num: reviewers simulated in standard mode (default 3)."""
 
     MODES = ("fast", "standard")
+    MAX_MODEL_LEN = DEEPREVIEWER_MAX_MODEL_LEN
 
     def __init__(self, model, mode="standard", reviewer_num=3, **kwargs):
         super().__init__(model, **kwargs)
@@ -152,35 +201,38 @@ class DeepReviewerModel(VLLMModel):
                 f"paper deficiencies identified. Finally, provide complete review results."
                 + _DEEPREVIEWER_SIMREVIEWER_PROMPT)
 
-    def _count_prompt_tokens(self, messages):
-        """Prompt length in tokens, chat template included, via vLLM's
-        /tokenize endpoint (served at the server root, not under /v1)."""
-        root = str(self.client.base_url).rstrip("/").removesuffix("/v1")
-        resp = httpx.post(
-            f"{root}/tokenize",
-            json={"model": self.model, "messages": messages, "add_generation_prompt": True},
-            headers={"Authorization": f"Bearer {self.client.api_key}"},
-            timeout=600,
-        )
-        resp.raise_for_status()
-        return resp.json()["count"]
 
-    def review(self, paper_text, max_model_len=DEEPREVIEWER_MAX_MODEL_LEN):
-        messages = [
-            {"role": "system", "content": self.system_prompt()},
-            {"role": "user", "content": paper_text},
-        ]
-        # vLLM rejects prompt + max_tokens > --max-model-len, so generation
-        # gets whatever the prompt leaves of the full context.
-        prompt_tokens = self._count_prompt_tokens(messages)
-        max_tokens = max_model_len - prompt_tokens
-        if max_tokens <= 0:
-            raise ValueError(f"paper is {prompt_tokens} tokens, which fills DeepReviewer's {max_model_len}-token context")
-        resp = self.client.chat.completions.create(
-            model=self.model,
-            messages=messages,
-            temperature=0.4,
-            top_p=0.95,
-            max_tokens=max_tokens,
-        )
-        return resp.choices[0].message.content
+# CycleReviewer (WestlakeNLP/CycleReviewer-ML-Llama-3.1-8B,
+# WestlakeNLP/CycleReviewer-Llama-3.1-70B). It has a single mode: 4
+# reviews, then a meta review and an Accept/Reject decision. The system
+# prompt (stray indentation included, as the authors' code sends it),
+# sampling parameters and context length are copied from:
+# https://github.com/zhu-minjun/Researcher/blob/main/ai_researcher/cycle_reviewer.py
+# Must match --max-model-len in sbatch_review_cyclereviewer_{8b,70b}.sh.
+CYCLEREVIEWER_MAX_MODEL_LEN = 50000
+_CYCLEREVIEWER_PROMPT = (
+    'You are an expert academic reviewer tasked with providing a thorough and balanced evaluation of research papers. For each paper submitted, conduct a comprehensive review addressing the following aspects:' "\n"
+    '    ' "\n"
+    '            1. Summary: Briefly outline main points and objectives.' "\n"
+    '            2. Soundness: Assess methodology and logical consistency.' "\n"
+    '            3. Presentation: Evaluate clarity, organization, and visual aids.' "\n"
+    '            4. Contribution: Analyze significance and novelty in the field.' "\n"
+    "            5. Strengths: Identify the paper's strongest aspects." "\n"
+    '            6. Weaknesses: Point out areas for improvement.' "\n"
+    '            7. Questions: Pose questions for the authors.' "\n"
+    '            8. Rating: Score 1-10, justify your rating.' "\n"
+    '            9. Meta Review: Provide overall assessment and recommendation (Accept/Reject).' "\n"
+    '    ' "\n"
+    '            Maintain objectivity and provide specific examples from the paper to support your evaluation.' "\n"
+    '    ' "\n"
+    '            You need to fill out **4** review opinions.'
+)
+
+
+class CycleReviewerModel(_NativeReviewerModel):
+    """A CycleReviewer checkpoint served by vLLM."""
+
+    MAX_MODEL_LEN = CYCLEREVIEWER_MAX_MODEL_LEN
+
+    def system_prompt(self):
+        return _CYCLEREVIEWER_PROMPT
