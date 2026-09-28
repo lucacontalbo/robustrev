@@ -17,6 +17,7 @@ MODEL_CLASSES = {
     "vllm": models.VLLMModel,
     "deepreviewer": models.DeepReviewerModel,
     "cyclereviewer": models.CycleReviewerModel,
+    "openreviewer": models.OpenReviewerModel,
 }
 FINAL_KEYWORD = "FINAL ANSWER:"
 # Models for which a direct-PDF submission has already failed once and been
@@ -129,6 +130,24 @@ def _cyclereviewer_review(raw):
     }
 
 
+def _openreviewer_review(raw):
+    """OpenReviewer answers with one review in the ICLR 2025 form it's
+    given (see models.OpenReviewerModel): "## <Field>" headers, each followed
+    by its answer. Unlike the other native reviewers it also fills in the
+    ethics fields."""
+    sec = {
+        name.strip().lower(): text.strip()
+        for name, text in re.findall(r"^## *([A-Za-z ]+?) *:?[ \t]*\n(.*?)(?=^#{1,2} |\Z)", raw, re.DOTALL | re.MULTILINE)
+    }
+    return {
+        **{k: sec.get(k) for k in ("summary", "strengths", "weaknesses", "questions")},
+        "suggestions": None,  # the form's "Questions" asks for questions and suggestions together
+        **{k: _first_number(sec.get(k)) for k in ("soundness", "presentation", "contribution", "rating", "confidence")},
+        "flag_for_ethics_review": sec.get("flag for ethics review"),
+        "details_of_ethics_concerns": sec.get("details of ethics concerns"),
+    }
+
+
 def _interp(x, points, step=0.5):
     """Piecewise-linear map of x through (src, dst) anchor points, clamped to
     the ends and rounded to the target scale's step."""
@@ -156,6 +175,7 @@ _ICLR_RATING_TO_ACL_OVERALL = [(1, 1), (3, 2), (5, 3), (6, 3.5), (8, 4), (10, 5)
 _NATIVE_REVIEWERS = {
     models.DeepReviewerModel: ("DeepReviewer", _deepreviewer_review),
     models.CycleReviewerModel: ("CycleReviewer", _cyclereviewer_review),
+    models.OpenReviewerModel: ("OpenReviewer", _openreviewer_review),
 }
 
 
@@ -165,11 +185,18 @@ def _native_to_rubric(name, review, conference, raw):
     rating = review["rating"]
     if rating is None:
         raise ValueError(f"no rating found in {name} output\n--- original model response ---\n{raw}")
+    # Only OpenReviewer answers the ethics questions; for the others these
+    # are None and end up "N/A".
+    flag, ethics_details = review.get("flag_for_ethics_review"), review.get("details_of_ethics_concerns")
     if conference == "iclr":
-        return {k: review[k] for k in (
-            "summary", "soundness", "presentation", "contribution", "strengths", "weaknesses", "questions",
-            "rating", "confidence",
-        )}
+        return {
+            **{k: review[k] for k in (
+                "summary", "soundness", "presentation", "contribution", "strengths", "weaknesses", "questions",
+                "rating", "confidence",
+            )},
+            "flag_for_ethics_review": flag,
+            "details_of_ethics_concerns": ethics_details,
+        }
     if conference == "acl":
         overall = _interp(rating, _ICLR_RATING_TO_ACL_OVERALL)
         comments = "\n\n".join(filter(None, [review["suggestions"], review["questions"]]))
@@ -185,6 +212,9 @@ def _native_to_rubric(name, review, conference, raw):
             "overall_assessment": overall,
             "best_paper": "yes" if overall >= 4.5 else "no",
             "confidence": review["confidence"],  # same 1-5 scale in both forms
+            # ICLR's "No ethics review needed." vs any "Yes, ..." option.
+            "needs_ethics_review": None if flag is None else "no" if flag.lower().startswith("no") else "yes",
+            "ethical_concerns": ethics_details,
         }
     raise ValueError(f"no {name} mapping for rubric '{conference}' (supported: iclr, acl)")
 
@@ -232,15 +262,15 @@ class Reviewer:
         return "\n".join(p.extract_text() or "" for p in PdfReader(self.pdf_path).pages)
 
     def _extract_markdown(self):
-        # Imported here so only DeepReviewer/CycleReviewer runs need
-        # pymupdf4llm installed.
+        # Imported here so only native-reviewer runs (DeepReviewer,
+        # CycleReviewer, OpenReviewer) need pymupdf4llm installed.
         import pymupdf4llm
         # Our PDFs are compiled from LaTeX, so they already carry a text
         # layer: OCR isn't needed and would fail wherever Tesseract isn't set up.
         return pymupdf4llm.to_markdown(str(self.pdf_path), use_ocr=False)
 
     def _generate_native_review(self, name, parse):
-        # DeepReviewer/CycleReviewer ignore our review form (see
+        # DeepReviewer/CycleReviewer/OpenReviewer ignore our review form (see
         # models._NativeReviewerModel), so their native review is mapped
         # onto the rubric instead. Fields with no counterpart are "N/A", as
         # the prompt asks other models to do. They were trained on papers

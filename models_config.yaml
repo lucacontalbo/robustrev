@@ -1,5 +1,6 @@
 # Models available to run_review.py. `model_class` must be a key of
-# MODEL_CLASSES in reviewer.py ("anthropic", "openai", or "vllm").
+# MODEL_CLASSES in reviewer.py ("anthropic", "openai", "vllm",
+# "deepreviewer", "cyclereviewer", or "openreviewer").
 #
 # Any key beyond model_id/model_name/model_class is forwarded as-is to the
 # model class's constructor (see model_kwargs() in robustrev.py). For a
@@ -21,6 +22,20 @@
 #                directly instead of extracted text, and if that submission
 #                is rejected at call time, transparently falls back to
 #                extracted text and logs it once to log.txt (default: false)
+#
+# A deepreviewer entry (WestlakeNLP/DeepReviewer-*, served by vllm) takes the
+# same base_url/api_key, plus models.DeepReviewerModel's:
+#   mode:         "fast" or "standard" (default "standard")
+#   reviewer_num: reviewers simulated in standard mode (default 3)
+# Use one entry per mode so each mode's reviews get their own output
+# directory. A cyclereviewer entry (WestlakeNLP/CycleReviewer-*, served by
+# vllm) takes only base_url/api_key: it has a single mode (4 reviews). So
+# does an openreviewer entry (maxidl/Llama-OpenReviewer-*, served by vllm):
+# a single review in the ICLR 2025 form it was trained on.
+# All three write their own ICLR-style review instead of filling in our form;
+# reviewer.py maps it onto the iclr or acl rubric. model_name is what vllm
+# serves the model as, i.e. the --model path unless --served-model-name is
+# set.
 - model_id: claude-opus-4-8
   model_name: claude-opus-4-8
   model_class: anthropic
@@ -65,3 +80,37 @@
 - model_id: nemotron-3-super-120b
   model_name: nvidia/NVIDIA-Nemotron-3-Super-120B-A12B-FP8
   model_class: vllm
+
+- model_id: DeepReviewer-7B-fast
+  model_name: /leonardo_work/IscrB_ESG-NEXT/mcontalb/hf_models/DeepReviewer-7B
+  model_class: deepreviewer
+  mode: fast
+
+- model_id: DeepReviewer-7B-standard
+  model_name: /leonardo_work/IscrB_ESG-NEXT/mcontalb/hf_models/DeepReviewer-7B
+  model_class: deepreviewer
+  mode: standard
+  reviewer_num: 3
+
+- model_id: DeepReviewer-14B-fast
+  model_name: /leonardo_work/IscrB_ESG-NEXT/mcontalb/hf_models/DeepReviewer-14B
+  model_class: deepreviewer
+  mode: fast
+
+- model_id: DeepReviewer-14B-standard
+  model_name: /leonardo_work/IscrB_ESG-NEXT/mcontalb/hf_models/DeepReviewer-14B
+  model_class: deepreviewer
+  mode: standard
+  reviewer_num: 3
+
+- model_id: CycleReviewer-ML-Llama-3.1-8B
+  model_name: /leonardo_work/IscrB_ESG-NEXT/mcontalb/hf_models/CycleReviewer-ML-Llama-3.1-8B
+  model_class: cyclereviewer
+
+- model_id: CycleReviewer-Llama-3.1-70B
+  model_name: /leonardo_work/IscrB_ESG-NEXT/mcontalb/hf_models/CycleReviewer-Llama-3.1-70B
+  model_class: cyclereviewer
+
+- model_id: Llama-OpenReviewer-8B
+  model_name: /leonardo_work/IscrB_ESG-NEXT/mcontalb/hf_models/Llama-OpenReviewer-8B
+  model_class: openreviewer
