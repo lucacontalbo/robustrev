@@ -1,0 +1,10 @@
+# Dependencies of ReviewerToo's pipeline as run by run_reviewertoo.py (the
+# LitLLM stage, which needs semanticscholar/sentence-transformers/
+# scikit-learn, is disabled). Tested with the versions noted.
+docling>=2.130      # rtoo/src/utils/file_utils.py (PDF -> markdown); pulls in torch
+pdfminer.six        # rtoo/src/utils/file_utils.py
+openai>=1.0         # rtoo/src/services/openai_like_service.py (AsyncOpenAI)
+python-dotenv
+pyyaml
+numpy
+tqdm
