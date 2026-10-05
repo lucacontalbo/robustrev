@@ -2,6 +2,11 @@
 # LitLLM stage, which needs semanticscholar/sentence-transformers/
 # scikit-learn, is disabled). Tested with the versions noted.
 docling>=2.130      # rtoo/src/utils/file_utils.py (PDF -> markdown); pulls in torch
+# docling's OCR, as run_reviewertoo.py configures it. rapidocr is pinned
+# because its model download URLs contain its version, so an upgrade would
+# look for models setup_reviewertoo.sh never downloaded.
+rapidocr==3.9.2
+onnxruntime
 pdfminer.six        # rtoo/src/utils/file_utils.py
 openai>=1.0         # rtoo/src/services/openai_like_service.py (AsyncOpenAI)
 python-dotenv
