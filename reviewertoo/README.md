@@ -18,7 +18,9 @@ robustrev.
 
 For each paper the driver calls ReviewerToo's own `main.process_single_paper()`:
 
-1. PDF → markdown with ReviewerToo's docling converter;
+1. PDF → markdown with ReviewerToo's docling converter (with its OCR
+   engine fixed to RapidOCR on onnxruntime, what docling's automatic choice
+   normally picks, so that it never needs to download other models);
 2. 13 persona reviews (default, critical, permissive, theorist, empiricist,
    pragmatist, pedagogical, big_picture, reproducibility, bengio, hinton,
    lecun, pal);
@@ -29,6 +31,11 @@ For each paper the driver calls ReviewerToo's own `main.process_single_paper()`:
 The LitLLM literature search is off: it needs live internet access
 (Semantic Scholar, OpenAlex, arXiv, Serper) and API keys. About 33 LLM calls
 per paper.
+
+The driver runs offline: Hugging Face libraries are put in offline mode, and
+any connection to a host other than localhost or `$VLLM_BASE_URL`'s fails at
+once with `NoInternetError` (in that paper's `error.txt`). All docling models
+come from `setup_reviewertoo.sh`.
 
 ## Outputs
 

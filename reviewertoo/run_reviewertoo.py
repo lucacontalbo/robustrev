@@ -23,18 +23,27 @@ ReviewerToo produces no sub-scores and its final decision is categorical, so
 the numeric score is the mean of the persona reviews' ratings (out of 10,
 ICLR scale), mapped onto the ACL scale the same way as for the other native
 review formats in robustrev.
+
+Compute nodes have no internet access, so `review` runs fully offline (see
+go_offline()): only the vLLM server can be reached, and every model docling
+needs must already be on disk (setup_reviewertoo.sh downloads them).
 """
 import argparse
 import asyncio
 import contextlib
+import functools
+import ipaddress
 import json
 import math
+import os
 import re
 import shutil
+import socket
 import sys
 import tempfile
 import traceback
 from pathlib import Path
+from urllib.parse import urlsplit
 
 import yaml
 from tqdm import tqdm
@@ -126,11 +135,33 @@ def isolated_compile(compiler, project_dir):
 # ---------------------------------------------------------------------------
 # Running ReviewerToo on one paper.
 
+@functools.cache
+def docling_converter():
+    """ReviewerToo's docling converter (rtoo/src/utils/file_utils.py: a
+    default DocumentConverter()), with its OCR engine fixed rather than
+    picked at runtime.
+
+    By default docling's OCR is "auto" (OcrAutoModel): it takes the first
+    engine that imports, normally RapidOCR on onnxruntime, but silently
+    falls back to RapidOCR on torch, whose weights are different files that
+    RapidOCR then tries to download. Asking for RapidOCR on onnxruntime with
+    exactly the options auto mode would give it yields the same OCR as the
+    default converter, always with the models setup_reviewertoo.sh
+    downloaded; if onnxruntime can't be used, conversion fails instead."""
+    from docling.datamodel.base_models import InputFormat
+    from docling.datamodel.pipeline_options import OcrAutoOptions, PdfPipelineOptions, RapidOcrOptions
+    from docling.document_converter import DocumentConverter, PdfFormatOption
+
+    auto = OcrAutoOptions()
+    ocr_options = RapidOcrOptions(backend="onnxruntime", mode=auto.mode, lang=auto.lang)
+    pipeline_options = PdfPipelineOptions(ocr_options=ocr_options)
+    return DocumentConverter(format_options={InputFormat.PDF: PdfFormatOption(pipeline_options=pipeline_options)})
+
+
 def pdf_to_markdown(pdf_path):
-    """The paper as markdown, converted with ReviewerToo's own docling
-    converter (rtoo/src/utils/file_utils.py), as its reviewers expect."""
-    from src.utils.file_utils import docling_converter
-    return docling_converter.convert(str(pdf_path)).document.export_to_markdown()
+    """The paper as markdown, converted as ReviewerToo does, as its reviewers
+    expect."""
+    return docling_converter().convert(str(pdf_path)).document.export_to_markdown()
 
 
 def reviewertoo_config(work_dir, model):
@@ -336,7 +367,54 @@ def rubric_fields(conference):
 
 # ---------------------------------------------------------------------------
 
+class NoInternetError(ConnectionRefusedError):
+    """A connection go_offline() blocked."""
+
+
+def go_offline():
+    """Make this process unable to reach anything but the vLLM server.
+
+    Compute nodes have no internet access, and a library trying to download
+    something there would only fail after timing out (once per paper). This
+    puts the Hugging Face libraries (docling's layout and table models) in
+    offline mode, and makes every socket connection to a host other than
+    localhost or $VLLM_BASE_URL's fail at once with NoInternetError, naming
+    the address. Call it before importing docling or ReviewerToo."""
+    for var in ("HF_HUB_OFFLINE", "TRANSFORMERS_OFFLINE", "HF_DATASETS_OFFLINE"):
+        os.environ[var] = "1"
+
+    allowed = set()
+    vllm_host = urlsplit(os.environ.get("VLLM_BASE_URL", "")).hostname
+    if vllm_host:
+        allowed.add(vllm_host)
+        with contextlib.suppress(OSError):
+            allowed.update(info[4][0] for info in socket.getaddrinfo(vllm_host, None))
+
+    def is_allowed(sock, address):
+        if sock.family not in (socket.AF_INET, socket.AF_INET6):
+            return True  # e.g. Unix sockets
+        host = address[0]
+        if host in allowed or host == "localhost":
+            return True
+        try:
+            return ipaddress.ip_address(host.split("%")[0]).is_loopback
+        except ValueError:
+            return False
+
+    def guarded(method):
+        @functools.wraps(method)
+        def wrapper(sock, address, *args, **kwargs):
+            if not is_allowed(sock, address):
+                raise NoInternetError(f"internet access is disabled (blocked connection to {address})")
+            return method(sock, address, *args, **kwargs)
+        return wrapper
+
+    socket.socket.connect = guarded(socket.socket.connect)
+    socket.socket.connect_ex = guarded(socket.socket.connect_ex)
+
+
 def review(args):
+    go_offline()
     if args.model_id not in MODEL_IDS:
         raise ValueError(f"unknown model_id '{args.model_id}'; choices are {sorted(MODEL_IDS)}")
     model = MODEL_IDS[args.model_id]
